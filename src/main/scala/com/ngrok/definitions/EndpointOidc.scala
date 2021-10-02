@@ -16,7 +16,7 @@ import io.circe.syntax._
   * @param scopes The set of scopes to request from the OIDC identity provider.
   */
 final case class EndpointOidc(
-  enabled: Option[Boolean],
+  enabled: Option[Boolean] = None,
   optionsPassthrough: Boolean,
   cookiePrefix: String,
   inactivityTimeout: Long,

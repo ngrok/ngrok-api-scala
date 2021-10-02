@@ -10,7 +10,7 @@ import io.circe.syntax._
   */
 final case class AwsCredentials(
   awsAccessKeyId: String,
-  awsSecretAccessKey: Option[String]
+  awsSecretAccessKey: Option[String] = None
 )
 
 object AwsCredentials {

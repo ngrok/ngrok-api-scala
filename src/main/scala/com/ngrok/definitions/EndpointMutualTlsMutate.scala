@@ -9,7 +9,7 @@ import io.circe.syntax._
   * @param certificateAuthorityIds list of certificate authorities that will be used to validate the TLS client certificate presnted by the initiatiator of the TLS connection
   */
 final case class EndpointMutualTlsMutate(
-  enabled: Option[Boolean],
+  enabled: Option[Boolean] = None,
   certificateAuthorityIds: List[String]
 )
 

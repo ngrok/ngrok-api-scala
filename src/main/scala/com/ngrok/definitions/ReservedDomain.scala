@@ -27,12 +27,12 @@ final case class ReservedDomain(
   metadata: String,
   domain: String,
   region: String,
-  cnameTarget: Option[String],
-  httpEndpointConfiguration: Option[Ref],
-  httpsEndpointConfiguration: Option[Ref],
-  certificate: Option[Ref],
-  certificateManagementPolicy: Option[ReservedDomainCertPolicy],
-  certificateManagementStatus: Option[ReservedDomainCertStatus]
+  cnameTarget: Option[String] = None,
+  httpEndpointConfiguration: Option[Ref] = None,
+  httpsEndpointConfiguration: Option[Ref] = None,
+  certificate: Option[Ref] = None,
+  certificateManagementPolicy: Option[ReservedDomainCertPolicy] = None,
+  certificateManagementStatus: Option[ReservedDomainCertStatus] = None
 )
 
 object ReservedDomain {

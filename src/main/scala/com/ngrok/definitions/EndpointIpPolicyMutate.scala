@@ -9,7 +9,7 @@ import io.circe.syntax._
   * @param ipPolicyIds list of all IP policies that will be used to check if a source IP is allowed access to the endpoint
   */
 final case class EndpointIpPolicyMutate(
-  enabled: Option[Boolean],
+  enabled: Option[Boolean] = None,
   ipPolicyIds: List[String]
 )
 

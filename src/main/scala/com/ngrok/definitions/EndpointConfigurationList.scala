@@ -12,7 +12,7 @@ import io.circe.syntax._
 final case class EndpointConfigurationList(
   endpointConfigurations: List[EndpointConfiguration],
   uri: java.net.URI,
-  nextPageUri: Option[java.net.URI]
+  nextPageUri: Option[java.net.URI] = None
 ) extends Pageable
 
 object EndpointConfigurationList {

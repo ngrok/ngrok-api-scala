@@ -10,9 +10,9 @@ import io.circe.syntax._
   * @param minVersion The minimum TLS version used for termination and advertised to the client during the TLS handshake. if unspecified, ngrok will choose an industry-safe default. This value must be null if <code>terminate_at</code> is set to <code>upstream</code>.
   */
 final case class EndpointTlsTermination(
-  enabled: Option[Boolean],
+  enabled: Option[Boolean] = None,
   terminateAt: String,
-  minVersion: Option[String]
+  minVersion: Option[String] = None
 )
 
 object EndpointTlsTermination {

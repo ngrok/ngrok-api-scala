@@ -14,8 +14,8 @@ import io.circe.syntax._
   * @param organizations a list of github org identifiers. users who are members of any of the listed organizations will be allowed access. identifiers should be the organization's 'slug'
   */
 final case class EndpointOAuthGitHub(
-  clientId: Option[String],
-  clientSecret: Option[String],
+  clientId: Option[String] = None,
+  clientSecret: Option[String] = None,
   scopes: List[String],
   emailAddresses: List[String],
   emailDomains: List[String],

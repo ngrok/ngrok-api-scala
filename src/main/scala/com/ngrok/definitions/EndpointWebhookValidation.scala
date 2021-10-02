@@ -10,7 +10,7 @@ import io.circe.syntax._
   * @param secret a string secret used to validate requests from the given provider. All providers except AWS SNS require a secret
   */
 final case class EndpointWebhookValidation(
-  enabled: Option[Boolean],
+  enabled: Option[Boolean] = None,
   provider: String,
   secret: String
 )

@@ -43,9 +43,9 @@ library.
 ### Versioning
 
 This class library is published to Maven Central using semantic
-versioning. Breaking changes to the API will only be released with a bump
-of the major version number.  Each released commit is tagged in this
-repository.
+versioning. Breaking changes to the API will only be released with a
+bump of the major version number.  Each released commit is tagged in
+this repository.
 
 No compatibility promises are made for versions < 1.0.0.
 

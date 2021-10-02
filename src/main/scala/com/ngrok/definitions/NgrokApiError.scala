@@ -80,5 +80,12 @@ object NgrokApiError {
       cause = None
     )
 
-  def unapply(error: NgrokApiError): Option[Int] = Some(error.httpStatusCode)
+}
+
+object NgrokApiErrorHttpStatus {
+  def unapply(error: NgrokApiError): Some[Int] = Some(error.httpStatusCode)
+}
+
+object NgrokApiErrorCode {
+  def unapply(error: NgrokApiError): Option[String] = error.errorCode
 }

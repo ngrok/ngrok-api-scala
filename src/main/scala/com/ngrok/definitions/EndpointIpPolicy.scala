@@ -9,7 +9,7 @@ import io.circe.syntax._
   * @param ipPolicies the value of the <code>ip_policies</code> parameter as a [[scala.List]] of [[Ref]]
   */
 final case class EndpointIpPolicy(
-  enabled: Option[Boolean],
+  enabled: Option[Boolean] = None,
   ipPolicies: List[Ref]
 )
 

@@ -12,8 +12,8 @@ import io.circe.syntax._
   * @param emailDomains a list of email domains of users authenticated by identity provider who are allowed access to the endpoint
   */
 final case class EndpointOAuthMicrosoft(
-  clientId: Option[String],
-  clientSecret: Option[String],
+  clientId: Option[String] = None,
+  clientSecret: Option[String] = None,
   scopes: List[String],
   emailAddresses: List[String],
   emailDomains: List[String]

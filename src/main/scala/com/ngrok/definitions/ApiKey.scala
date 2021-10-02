@@ -18,7 +18,7 @@ final case class ApiKey(
   description: String,
   metadata: String,
   createdAt: java.time.OffsetDateTime,
-  token: Option[String]
+  token: Option[String] = None
 )
 
 object ApiKey {

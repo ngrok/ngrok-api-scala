@@ -9,7 +9,7 @@ import io.circe.syntax._
   * @param eventStreams list of all EventStreams that will be used to configure and export this endpoint's logs
   */
 final case class EndpointLogging(
-  enabled: Option[Boolean],
+  enabled: Option[Boolean] = None,
   eventStreams: List[Ref]
 )
 

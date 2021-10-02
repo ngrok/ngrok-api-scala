@@ -7,8 +7,8 @@ import Dependencies._
 
 ThisBuild / organization := "com.ngrok"
 ThisBuild / organizationName := "ngrok"
-ThisBuild / version := IO.readLines(file("project/version")).head.trim
-ThisBuild / description := "Ngrok API client for Scala applications"
+ThisBuild / version := Version.version
+ThisBuild / description := "ngrok API client for Scala applications"
 ThisBuild / licenses := List("MIT" -> url("https://mit-license.org/"))
 ThisBuild / homepage := Some(url("https://ngrok.com"))
 ThisBuild / crossScalaVersions := Seq("2.13.6", "2.12.14")
@@ -76,7 +76,7 @@ lazy val root = (project in file("."))
       "-Xlint:type-parameter-shadow",
     ),
     Compile / doc / scalacOptions ++= Seq(
-      "-doc-title", "Ngrok API Documentation",
+      "-doc-title", "ngrok API Documentation",
       "-doc-version", s"(${version.value})",
       "-implicits",
       "-groups",

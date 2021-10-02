@@ -14,7 +14,7 @@ import io.circe.syntax._
   * @param authCheckInterval Integer number of seconds after which ngrok guarantees it will refresh user state from the identity provider and recheck whether the user is still authorized to access the endpoint. This is the preferred tunable to use to enforce a minimum amount of time after which a revoked user will no longer be able to access the resource.
   */
 final case class EndpointOAuth(
-  enabled: Option[Boolean],
+  enabled: Option[Boolean] = None,
   provider: EndpointOAuthProvider,
   optionsPassthrough: Boolean,
   cookiePrefix: String,
