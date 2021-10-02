@@ -17,14 +17,14 @@ import io.circe.syntax._
   * @param nameidFormat Defines the name identifier format the SP expects the IdP to use in its assertions to identify subjects. If unspecified, a default value of <code>urn:oasis:names:tc:SAML:2.0:nameid-format:persistent</code> will be used. A subset of the allowed values enumerated by the SAML specification are supported.
   */
 final case class EndpointSamlMutate(
-  enabled: Option[Boolean],
+  enabled: Option[Boolean] = None,
   optionsPassthrough: Boolean,
   cookiePrefix: String,
   inactivityTimeout: Long,
   maximumDuration: java.time.Duration,
   idpMetadata: String,
   forceAuthn: Boolean,
-  allowIdpInitiated: Option[Boolean],
+  allowIdpInitiated: Option[Boolean] = None,
   authorizedGroups: List[String],
   nameidFormat: String
 )

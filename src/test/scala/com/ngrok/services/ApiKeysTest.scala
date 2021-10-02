@@ -6,14 +6,14 @@ import java.time.OffsetDateTime
 import com.github.tomakehurst.wiremock.client.WireMock._
 import com.linecorp.armeria.common.HttpHeaderNames
 import com.ngrok.Version
-import com.ngrok.definitions.{ApiKey, ApiKeyList, NgrokApiError}
+import com.ngrok.definitions.{ApiKey, ApiKeyList, NgrokApiErrorHttpStatus}
 import io.circe.Json
 import io.circe.syntax._
-import org.scalatest.{OptionValues, TryValues}
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.time.{Seconds, Span}
+import org.scalatest.{OptionValues, TryValues}
 import support.TestBase
 
 import scala.util.Try
@@ -56,69 +56,86 @@ object ApiKeysTest {
 class ApiKeysTest extends AnyFreeSpec with Matchers with ScalaFutures with OptionValues with TryValues with TestBase {
   import ApiKeysTest._
 
-  implicit private val defaultPatience: PatienceConfig = PatienceConfig(timeout = Span(2, Seconds))
+  implicit private val defaultPatience: PatienceConfig = PatienceConfig(timeout = Span(4, Seconds))
 
   override def beforeEach(): Unit = {
     super.beforeEach()
 
-    wireMock.resetAll()
+    if (!UseLiveApi) {
+      wireMock.resetAll()
 
-    wireMock.stubFor(
-      post(urlPathEqualTo("/api_keys"))
-        .withHeader(HttpHeaderNames.AUTHORIZATION.toString(), equalTo(s"Bearer $FakeApiSecret"))
-        .withHeader(HttpHeaderNames.USER_AGENT.toString(), equalTo(s"ngrok-api-client-scala/${Version.ClientVersion}"))
-        .withHeader("ngrok-version", equalTo(Version.ApiVersion))
-        .withHeader(HttpHeaderNames.CONTENT_TYPE.toString(), containing("application/json"))
-        .withRequestBody(equalToJson(apiKeyCreate.asJson.noSpaces))
-        .willReturn(
-          ok(apiKey.asJson.noSpaces)
-            .withHeader(HttpHeaderNames.CONTENT_TYPE.toString(), "application/json")
-        )
-    )
+      wireMock.stubFor(
+        post(urlPathEqualTo("/api_keys"))
+          .withHeader(HttpHeaderNames.AUTHORIZATION.toString(), equalTo(s"Bearer $FakeApiSecret"))
+          .withHeader(
+            HttpHeaderNames.USER_AGENT.toString(),
+            equalTo(s"ngrok-api-client-scala/${Version.ClientVersion}")
+          )
+          .withHeader("ngrok-version", equalTo(Version.ApiVersion))
+          .withHeader(HttpHeaderNames.CONTENT_TYPE.toString(), containing("application/json"))
+          .withRequestBody(equalToJson(apiKeyCreate.asJson.noSpaces))
+          .willReturn(
+            ok(apiKey.asJson.noSpaces)
+              .withHeader(HttpHeaderNames.CONTENT_TYPE.toString(), "application/json")
+          )
+      )
 
-    wireMock.stubFor(
-      get(urlPathEqualTo(s"/api_keys/${apiKey.id}"))
-        .withHeader(HttpHeaderNames.AUTHORIZATION.toString(), equalTo(s"Bearer $FakeApiSecret"))
-        .withHeader(HttpHeaderNames.USER_AGENT.toString(), equalTo(s"ngrok-api-client-scala/${Version.ClientVersion}"))
-        .withHeader("ngrok-version", equalTo(Version.ApiVersion))
-        .willReturn(
-          ok(apiKeyNoToken.asJson.noSpaces)
-            .withHeader(HttpHeaderNames.CONTENT_TYPE.toString(), "application/json")
-        )
-    )
+      wireMock.stubFor(
+        get(urlPathEqualTo(s"/api_keys/${apiKey.id}"))
+          .withHeader(HttpHeaderNames.AUTHORIZATION.toString(), equalTo(s"Bearer $FakeApiSecret"))
+          .withHeader(
+            HttpHeaderNames.USER_AGENT.toString(),
+            equalTo(s"ngrok-api-client-scala/${Version.ClientVersion}")
+          )
+          .withHeader("ngrok-version", equalTo(Version.ApiVersion))
+          .willReturn(
+            ok(apiKeyNoToken.asJson.noSpaces)
+              .withHeader(HttpHeaderNames.CONTENT_TYPE.toString(), "application/json")
+          )
+      )
 
-    wireMock.stubFor(
-      get(urlPathEqualTo("/api_keys"))
-        .withQueryParam("limit", equalTo("10"))
-        .withHeader(HttpHeaderNames.AUTHORIZATION.toString(), equalTo(s"Bearer $FakeApiSecret"))
-        .withHeader(HttpHeaderNames.USER_AGENT.toString(), equalTo(s"ngrok-api-client-scala/${Version.ClientVersion}"))
-        .withHeader("ngrok-version", equalTo(Version.ApiVersion))
-        .willReturn(
-          ok(apiKeyList.asJson.noSpaces)
-            .withHeader(HttpHeaderNames.CONTENT_TYPE.toString(), "application/json")
-        )
-    )
+      wireMock.stubFor(
+        get(urlPathEqualTo("/api_keys"))
+          .withQueryParam("limit", equalTo("10"))
+          .withHeader(HttpHeaderNames.AUTHORIZATION.toString(), equalTo(s"Bearer $FakeApiSecret"))
+          .withHeader(
+            HttpHeaderNames.USER_AGENT.toString(),
+            equalTo(s"ngrok-api-client-scala/${Version.ClientVersion}")
+          )
+          .withHeader("ngrok-version", equalTo(Version.ApiVersion))
+          .willReturn(
+            ok(apiKeyList.asJson.noSpaces)
+              .withHeader(HttpHeaderNames.CONTENT_TYPE.toString(), "application/json")
+          )
+      )
 
-    wireMock.stubFor(
-      patch(urlPathEqualTo(s"/api_keys/${apiKey.id}"))
-        .withHeader(HttpHeaderNames.AUTHORIZATION.toString(), equalTo(s"Bearer $FakeApiSecret"))
-        .withHeader(HttpHeaderNames.USER_AGENT.toString(), equalTo(s"ngrok-api-client-scala/${Version.ClientVersion}"))
-        .withHeader("ngrok-version", equalTo(Version.ApiVersion))
-        .withHeader(HttpHeaderNames.CONTENT_TYPE.toString(), containing("application/json"))
-        .withRequestBody(equalToJson(apiKeyUpdate.asJson.noSpaces))
-        .willReturn(
-          ok(apiKeyUpdated.asJson.noSpaces)
-            .withHeader(HttpHeaderNames.CONTENT_TYPE.toString(), "application/json")
-        )
-    )
+      wireMock.stubFor(
+        patch(urlPathEqualTo(s"/api_keys/${apiKey.id}"))
+          .withHeader(HttpHeaderNames.AUTHORIZATION.toString(), equalTo(s"Bearer $FakeApiSecret"))
+          .withHeader(
+            HttpHeaderNames.USER_AGENT.toString(),
+            equalTo(s"ngrok-api-client-scala/${Version.ClientVersion}")
+          )
+          .withHeader("ngrok-version", equalTo(Version.ApiVersion))
+          .withHeader(HttpHeaderNames.CONTENT_TYPE.toString(), containing("application/json"))
+          .withRequestBody(equalToJson(apiKeyUpdate.asJson.noSpaces))
+          .willReturn(
+            ok(apiKeyUpdated.asJson.noSpaces)
+              .withHeader(HttpHeaderNames.CONTENT_TYPE.toString(), "application/json")
+          )
+      )
 
-    wireMock.stubFor(
-      delete(urlPathEqualTo(s"/api_keys/${apiKey.id}"))
-        .withHeader(HttpHeaderNames.AUTHORIZATION.toString(), equalTo(s"Bearer $FakeApiSecret"))
-        .withHeader(HttpHeaderNames.USER_AGENT.toString(), equalTo(s"ngrok-api-client-scala/${Version.ClientVersion}"))
-        .withHeader("ngrok-version", equalTo(Version.ApiVersion))
-        .willReturn(noContent())
-    )
+      wireMock.stubFor(
+        delete(urlPathEqualTo(s"/api_keys/${apiKey.id}"))
+          .withHeader(HttpHeaderNames.AUTHORIZATION.toString(), equalTo(s"Bearer $FakeApiSecret"))
+          .withHeader(
+            HttpHeaderNames.USER_AGENT.toString(),
+            equalTo(s"ngrok-api-client-scala/${Version.ClientVersion}")
+          )
+          .withHeader("ngrok-version", equalTo(Version.ApiVersion))
+          .willReturn(noContent())
+      )
+    }
   }
 
   "ApiKeys client can successfully issue all API operations" in {
@@ -170,8 +187,8 @@ class ApiKeysTest extends AnyFreeSpec with Matchers with ScalaFutures with Optio
     if (UseLiveApi) {
       val getResult = Try(ngrok.apiKeys.get(id).futureValue)
       getResult.failure.exception.getCause match {
-        case NgrokApiError(404) => // good
-        case other              => fail(other)
+        case NgrokApiErrorHttpStatus(404) => // good
+        case other                        => fail(other)
       }
     }
   }

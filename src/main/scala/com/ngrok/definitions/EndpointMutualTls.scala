@@ -9,7 +9,7 @@ import io.circe.syntax._
   * @param certificateAuthorities PEM-encoded CA certificates that will be used to validate. Multiple CAs may be provided by concatenating them together.
   */
 final case class EndpointMutualTls(
-  enabled: Option[Boolean],
+  enabled: Option[Boolean] = None,
   certificateAuthorities: List[Ref]
 )
 

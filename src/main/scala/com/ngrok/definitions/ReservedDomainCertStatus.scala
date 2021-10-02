@@ -9,8 +9,8 @@ import io.circe.syntax._
   * @param provisioningJob status of the certificate provisioning job, or null if the certificiate isn't being provisioned or renewed
   */
 final case class ReservedDomainCertStatus(
-  renewsAt: Option[java.time.OffsetDateTime],
-  provisioningJob: Option[ReservedDomainCertJob]
+  renewsAt: Option[java.time.OffsetDateTime] = None,
+  provisioningJob: Option[ReservedDomainCertJob] = None
 )
 
 object ReservedDomainCertStatus {

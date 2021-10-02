@@ -22,7 +22,7 @@ final case class ReservedAddr(
   metadata: String,
   addr: String,
   region: String,
-  endpointConfiguration: Option[Ref]
+  endpointConfiguration: Option[Ref] = None
 )
 
 object ReservedAddr {

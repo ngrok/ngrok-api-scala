@@ -31,18 +31,18 @@ final case class EndpointConfiguration(
   metadata: String,
   createdAt: java.time.OffsetDateTime,
   uri: java.net.URI,
-  circuitBreaker: Option[EndpointCircuitBreaker],
-  compression: Option[EndpointCompression],
-  requestHeaders: Option[EndpointRequestHeaders],
-  responseHeaders: Option[EndpointResponseHeaders],
-  ipPolicy: Option[EndpointIpPolicy],
-  mutualTls: Option[EndpointMutualTls],
-  tlsTermination: Option[EndpointTlsTermination],
-  webhookValidation: Option[EndpointWebhookValidation],
-  oauth: Option[EndpointOAuth],
-  logging: Option[EndpointLogging],
-  saml: Option[EndpointSaml],
-  oidc: Option[EndpointOidc]
+  circuitBreaker: Option[EndpointCircuitBreaker] = None,
+  compression: Option[EndpointCompression] = None,
+  requestHeaders: Option[EndpointRequestHeaders] = None,
+  responseHeaders: Option[EndpointResponseHeaders] = None,
+  ipPolicy: Option[EndpointIpPolicy] = None,
+  mutualTls: Option[EndpointMutualTls] = None,
+  tlsTermination: Option[EndpointTlsTermination] = None,
+  webhookValidation: Option[EndpointWebhookValidation] = None,
+  oauth: Option[EndpointOAuth] = None,
+  logging: Option[EndpointLogging] = None,
+  saml: Option[EndpointSaml] = None,
+  oidc: Option[EndpointOidc] = None
 )
 
 object EndpointConfiguration {

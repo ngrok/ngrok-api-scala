@@ -19,7 +19,7 @@ final case class Credential(
   createdAt: java.time.OffsetDateTime,
   description: String,
   metadata: String,
-  token: Option[String],
+  token: Option[String] = None,
   acl: List[String]
 )
 

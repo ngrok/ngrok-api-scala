@@ -12,7 +12,7 @@ import io.circe.syntax._
 final case class TlsCertificateList(
   tlsCertificates: List[TlsCertificate],
   uri: java.net.URI,
-  nextPageUri: Option[java.net.URI]
+  nextPageUri: Option[java.net.URI] = None
 ) extends Pageable
 
 object TlsCertificateList {

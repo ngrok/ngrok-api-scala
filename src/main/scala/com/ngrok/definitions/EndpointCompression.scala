@@ -8,7 +8,7 @@ import io.circe.syntax._
   * @param enabled <code>true</code> if the module will be applied to traffic, <code>false</code> to disable. default <code>true</code> if unspecified
   */
 final case class EndpointCompression(
-  enabled: Option[Boolean]
+  enabled: Option[Boolean] = None
 )
 
 object EndpointCompression {

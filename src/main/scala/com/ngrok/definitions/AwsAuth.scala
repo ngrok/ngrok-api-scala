@@ -9,8 +9,8 @@ import io.circe.syntax._
   * @param creds Credentials to your AWS account if you prefer ngrok to sign in with long-term access keys.
   */
 final case class AwsAuth(
-  role: Option[AwsRole],
-  creds: Option[AwsCredentials]
+  role: Option[AwsRole] = None,
+  creds: Option[AwsCredentials] = None
 )
 
 object AwsAuth {

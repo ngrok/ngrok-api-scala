@@ -10,9 +10,9 @@ import io.circe.syntax._
   * @param cloudwatchLogs Configuration used to send events to Amazon CloudWatch Logs.
   */
 final case class EventTarget(
-  firehose: Option[EventTargetFirehose],
-  kinesis: Option[EventTargetKinesis],
-  cloudwatchLogs: Option[EventTargetCloudwatchLogs]
+  firehose: Option[EventTargetFirehose] = None,
+  kinesis: Option[EventTargetKinesis] = None,
+  cloudwatchLogs: Option[EventTargetCloudwatchLogs] = None
 )
 
 object EventTarget {

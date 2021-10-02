@@ -10,7 +10,7 @@ import io.circe.syntax._
   * @param remove a list of header names that will be removed from the HTTP Response returned to the HTTP client
   */
 final case class EndpointResponseHeaders(
-  enabled: Option[Boolean],
+  enabled: Option[Boolean] = None,
   add: Map[String, String],
   remove: List[String]
 )

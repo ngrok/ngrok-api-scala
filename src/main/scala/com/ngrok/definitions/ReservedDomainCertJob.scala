@@ -12,10 +12,10 @@ import io.circe.syntax._
   * @param nsTargets if present, indicates the dns nameservers that the user must configure to complete the provisioning process of a wildcard certificate
   */
 final case class ReservedDomainCertJob(
-  errorCode: Option[String],
+  errorCode: Option[String] = None,
   msg: String,
   startedAt: java.time.OffsetDateTime,
-  retriesAt: Option[java.time.OffsetDateTime],
+  retriesAt: Option[java.time.OffsetDateTime] = None,
   nsTargets: List[ReservedDomainCertNsTarget]
 )
 

@@ -13,7 +13,7 @@ import io.circe.syntax._
   * @param errorThresholdPercentage Error threshold percentage should be between 0 - 1.0, not 0-100.0
   */
 final case class EndpointCircuitBreaker(
-  enabled: Option[Boolean],
+  enabled: Option[Boolean] = None,
   trippedDuration: java.time.Duration,
   rollingWindow: Long,
   numBuckets: Long,

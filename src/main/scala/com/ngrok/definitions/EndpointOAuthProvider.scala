@@ -11,10 +11,10 @@ import io.circe.syntax._
   * @param google configuration for using google as the identity provider
   */
 final case class EndpointOAuthProvider(
-  github: Option[EndpointOAuthGitHub],
-  facebook: Option[EndpointOAuthFacebook],
-  microsoft: Option[EndpointOAuthMicrosoft],
-  google: Option[EndpointOAuthGoogle]
+  github: Option[EndpointOAuthGitHub] = None,
+  facebook: Option[EndpointOAuthFacebook] = None,
+  microsoft: Option[EndpointOAuthMicrosoft] = None,
+  google: Option[EndpointOAuthGoogle] = None
 )
 
 object EndpointOAuthProvider {

@@ -36,7 +36,7 @@ final case class TlsCertificate(
   certificatePem: String,
   subjectCommonName: String,
   subjectAlternativeNames: TlsCertificateSaNs,
-  issuedAt: Option[java.time.OffsetDateTime],
+  issuedAt: Option[java.time.OffsetDateTime] = None,
   notBefore: java.time.OffsetDateTime,
   notAfter: java.time.OffsetDateTime,
   keyUsages: List[String],
