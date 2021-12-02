@@ -18,6 +18,7 @@ import io.circe.syntax._
   * @param certificate object referencing the TLS certificate used for connections to this domain. This can be either a user-uploaded certificate, the most recently issued automatic one, or null otherwise.
   * @param certificateManagementPolicy configuration for automatic management of TLS certificates for this domain, or null if automatic management is disabled
   * @param certificateManagementStatus status of the automatic certificate management for this domain, or null if automatic management is disabled
+  * @param acmeChallengeCnameTarget DNS CNAME target for the host _acme-challenge.example.com, where example.com is your reserved domain name. This is required to issue certificates for wildcard, non-ngrok reserved domains. Must be null for non-wildcard domains and ngrok subdomains.
   */
 final case class ReservedDomain(
   id: String,
@@ -32,7 +33,8 @@ final case class ReservedDomain(
   httpsEndpointConfiguration: Option[Ref] = None,
   certificate: Option[Ref] = None,
   certificateManagementPolicy: Option[ReservedDomainCertPolicy] = None,
-  certificateManagementStatus: Option[ReservedDomainCertStatus] = None
+  certificateManagementStatus: Option[ReservedDomainCertStatus] = None,
+  acmeChallengeCnameTarget: Option[String] = None
 )
 
 object ReservedDomain {
@@ -51,7 +53,8 @@ object ReservedDomain {
         value.httpsEndpointConfiguration.map(_.asJson).map(("https_endpoint_configuration", _)),
         value.certificate.map(_.asJson).map(("certificate", _)),
         value.certificateManagementPolicy.map(_.asJson).map(("certificate_management_policy", _)),
-        value.certificateManagementStatus.map(_.asJson).map(("certificate_management_status", _))
+        value.certificateManagementStatus.map(_.asJson).map(("certificate_management_status", _)),
+        value.acmeChallengeCnameTarget.map(_.asJson).map(("acme_challenge_cname_target", _))
       ).flatten.toMap.asJsonObject
     )
 
@@ -70,6 +73,7 @@ object ReservedDomain {
       certificate                 <- c.downField("certificate").as[Option[Ref]]
       certificateManagementPolicy <- c.downField("certificate_management_policy").as[Option[ReservedDomainCertPolicy]]
       certificateManagementStatus <- c.downField("certificate_management_status").as[Option[ReservedDomainCertStatus]]
+      acmeChallengeCnameTarget    <- c.downField("acme_challenge_cname_target").as[Option[String]]
     } yield ReservedDomain(
       id,
       uri,
@@ -83,6 +87,7 @@ object ReservedDomain {
       httpsEndpointConfiguration,
       certificate,
       certificateManagementPolicy,
-      certificateManagementStatus
+      certificateManagementStatus,
+      acmeChallengeCnameTarget
     )
 }
