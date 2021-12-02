@@ -9,14 +9,12 @@ import io.circe.syntax._
   * @param msg a message describing the current status or error
   * @param startedAt timestamp when the provisioning job started, RFC 3339 format
   * @param retriesAt timestamp when the provisioning job will be retried
-  * @param nsTargets if present, indicates the dns nameservers that the user must configure to complete the provisioning process of a wildcard certificate
   */
 final case class ReservedDomainCertJob(
   errorCode: Option[String] = None,
   msg: String,
   startedAt: java.time.OffsetDateTime,
-  retriesAt: Option[java.time.OffsetDateTime] = None,
-  nsTargets: List[ReservedDomainCertNsTarget]
+  retriesAt: Option[java.time.OffsetDateTime] = None
 )
 
 object ReservedDomainCertJob {
@@ -26,8 +24,7 @@ object ReservedDomainCertJob {
         value.errorCode.map(_.asJson).map(("error_code", _)),
         Option(("msg", value.msg.asJson)),
         Option(("started_at", value.startedAt.asJson)),
-        value.retriesAt.map(_.asJson).map(("retries_at", _)),
-        Option(("ns_targets", value.nsTargets.asJson))
+        value.retriesAt.map(_.asJson).map(("retries_at", _))
       ).flatten.toMap.asJsonObject
     )
 
@@ -37,12 +34,10 @@ object ReservedDomainCertJob {
       msg       <- c.downField("msg").as[String]
       startedAt <- c.downField("started_at").as[java.time.OffsetDateTime]
       retriesAt <- c.downField("retries_at").as[Option[java.time.OffsetDateTime]]
-      nsTargets <- c.downField("ns_targets").as[List[ReservedDomainCertNsTarget]]
     } yield ReservedDomainCertJob(
       errorCode,
       msg,
       startedAt,
-      retriesAt,
-      nsTargets
+      retriesAt
     )
 }

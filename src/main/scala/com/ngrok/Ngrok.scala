@@ -47,6 +47,14 @@ class Ngrok private (apiClient: NgrokApiClient)(implicit ec: ExecutionContext) {
     */
   lazy val abuseReports: AbuseReports = new AbuseReports(this.apiClient)
 
+  /** Creates a service client for AgentIngresses.
+    *
+    * See also <a href="https://ngrok.com/docs/api#api-agent-ingresses">https://ngrok.com/docs/api#api-agent-ingresses</a>.
+    *
+    * @return a service client
+    */
+  lazy val agentIngresses: AgentIngresses = new AgentIngresses(this.apiClient)
+
   /** API Keys are used to authenticate to the <a
     * href="https://ngrok.com/docs/api#authentication">ngrok
     *  API</a>. You may use the API itself
@@ -160,15 +168,6 @@ class Ngrok private (apiClient: NgrokApiClient)(implicit ec: ExecutionContext) {
     * @return a service client
     */
   lazy val ipRestrictions: IpRestrictions = new IpRestrictions(this.apiClient)
-
-  /** The IP Whitelist is deprecated and will be removed. Use an IP Restriction
-    *  with an <code>endpoints</code> type instead.
-    *
-    * See also <a href="https://ngrok.com/docs/api#api-ip-whitelist">https://ngrok.com/docs/api#api-ip-whitelist</a>.
-    *
-    * @return a service client
-    */
-  lazy val ipWhitelist: IpWhitelist = new IpWhitelist(this.apiClient)
 
   /** Reserved Addresses are TCP addresses that can be used to listen for traffic.
     *  TCP address hostnames and ports are assigned by ngrok, they cannot be
