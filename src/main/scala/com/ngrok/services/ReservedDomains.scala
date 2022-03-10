@@ -12,8 +12,6 @@ object ReservedDomains {
     region: Option[String],
     description: Option[String],
     metadata: Option[String],
-    httpEndpointConfigurationId: Option[String],
-    httpsEndpointConfigurationId: Option[String],
     certificateId: Option[String],
     certificateManagementPolicy: Option[ReservedDomainCertPolicy]
   )
@@ -26,8 +24,6 @@ object ReservedDomains {
           value.region.map(_.asJson).map(("region", _)),
           value.description.map(_.asJson).map(("description", _)),
           value.metadata.map(_.asJson).map(("metadata", _)),
-          value.httpEndpointConfigurationId.map(_.asJson).map(("http_endpoint_configuration_id", _)),
-          value.httpsEndpointConfigurationId.map(_.asJson).map(("https_endpoint_configuration_id", _)),
           value.certificateId.map(_.asJson).map(("certificate_id", _)),
           value.certificateManagementPolicy.map(_.asJson).map(("certificate_management_policy", _))
         ).flatten.toMap.asJsonObject
@@ -37,8 +33,6 @@ object ReservedDomains {
   private case class ReservedDomainsUpdate(
     description: Option[String],
     metadata: Option[String],
-    httpEndpointConfigurationId: Option[String],
-    httpsEndpointConfigurationId: Option[String],
     certificateId: Option[String],
     certificateManagementPolicy: Option[ReservedDomainCertPolicy]
   )
@@ -49,8 +43,6 @@ object ReservedDomains {
         List(
           value.description.map(_.asJson).map(("description", _)),
           value.metadata.map(_.asJson).map(("metadata", _)),
-          value.httpEndpointConfigurationId.map(_.asJson).map(("http_endpoint_configuration_id", _)),
-          value.httpsEndpointConfigurationId.map(_.asJson).map(("https_endpoint_configuration_id", _)),
           value.certificateId.map(_.asJson).map(("certificate_id", _)),
           value.certificateManagementPolicy.map(_.asJson).map(("certificate_management_policy", _))
         ).flatten.toMap.asJsonObject
@@ -77,8 +69,6 @@ class ReservedDomains private[ngrok] (apiClient: NgrokApiClient)(implicit ec: Ex
     * @param region reserve the domain in this geographic ngrok datacenter. Optional, default is us. (au, eu, ap, us, jp, in, sa)
     * @param description human-readable description of what this reserved domain will be used for
     * @param metadata arbitrary user-defined machine-readable data of this reserved domain. Optional, max 4096 bytes.
-    * @param httpEndpointConfigurationId ID of an endpoint configuration of type http that will be used to handle inbound http traffic to this domain
-    * @param httpsEndpointConfigurationId ID of an endpoint configuration of type https that will be used to handle inbound https traffic to this domain
     * @param certificateId ID of a user-uploaded TLS certificate to use for connections to targeting this domain. Optional, mutually exclusive with <code>certificate_management_policy</code>.
     * @param certificateManagementPolicy configuration for automatic management of TLS certificates for this domain, or null if automatic management is disabled. Optional, mutually exclusive with <code>certificate_id</code>.
     * @return a [[scala.concurrent.Future]] encapsulating the API call's result
@@ -88,8 +78,6 @@ class ReservedDomains private[ngrok] (apiClient: NgrokApiClient)(implicit ec: Ex
     region: Option[String] = None,
     description: Option[String] = None,
     metadata: Option[String] = None,
-    httpEndpointConfigurationId: Option[String] = None,
-    httpsEndpointConfigurationId: Option[String] = None,
     certificateId: Option[String] = None,
     certificateManagementPolicy: Option[ReservedDomainCertPolicy] = None
   ): Future[ReservedDomain] =
@@ -103,8 +91,6 @@ class ReservedDomains private[ngrok] (apiClient: NgrokApiClient)(implicit ec: Ex
           region,
           description,
           metadata,
-          httpEndpointConfigurationId,
-          httpsEndpointConfigurationId,
           certificateId,
           certificateManagementPolicy
         ).asJson
@@ -176,8 +162,6 @@ class ReservedDomains private[ngrok] (apiClient: NgrokApiClient)(implicit ec: Ex
     * @param id the value of the <code>id</code> parameter as a [[scala.Predef.String]]
     * @param description human-readable description of what this reserved domain will be used for
     * @param metadata arbitrary user-defined machine-readable data of this reserved domain. Optional, max 4096 bytes.
-    * @param httpEndpointConfigurationId ID of an endpoint configuration of type http that will be used to handle inbound http traffic to this domain
-    * @param httpsEndpointConfigurationId ID of an endpoint configuration of type https that will be used to handle inbound https traffic to this domain
     * @param certificateId ID of a user-uploaded TLS certificate to use for connections to targeting this domain. Optional, mutually exclusive with <code>certificate_management_policy</code>.
     * @param certificateManagementPolicy configuration for automatic management of TLS certificates for this domain, or null if automatic management is disabled. Optional, mutually exclusive with <code>certificate_id</code>.
     * @return a [[scala.concurrent.Future]] encapsulating the API call's result
@@ -186,8 +170,6 @@ class ReservedDomains private[ngrok] (apiClient: NgrokApiClient)(implicit ec: Ex
     id: String,
     description: Option[String] = None,
     metadata: Option[String] = None,
-    httpEndpointConfigurationId: Option[String] = None,
-    httpsEndpointConfigurationId: Option[String] = None,
     certificateId: Option[String] = None,
     certificateManagementPolicy: Option[ReservedDomainCertPolicy] = None
   ): Future[ReservedDomain] =
@@ -199,8 +181,6 @@ class ReservedDomains private[ngrok] (apiClient: NgrokApiClient)(implicit ec: Ex
         ReservedDomainsUpdate(
           description,
           metadata,
-          httpEndpointConfigurationId,
-          httpsEndpointConfigurationId,
           certificateId,
           certificateManagementPolicy
         ).asJson
@@ -237,40 +217,6 @@ class ReservedDomains private[ngrok] (apiClient: NgrokApiClient)(implicit ec: Ex
     apiClient.sendRequest[Unit](
       NgrokApiClient.HttpMethod.Delete,
       s"/reserved_domains/$id/certificate",
-      List.empty,
-      Option.empty
-    )
-
-  /** Detach the http endpoint configuration attached to a reserved domain.
-    *
-    * See also <a href="https://ngrok.com/docs/api#api-reserved-domains-delete-http-endpoint-config">https://ngrok.com/docs/api#api-reserved-domains-delete-http-endpoint-config</a>.
-    *
-    * @param id a resource identifier
-    * @return a [[scala.concurrent.Future]] encapsulating the API call's result
-    */
-  def deleteHttpEndpointConfig(
-    id: String
-  ): Future[Unit] =
-    apiClient.sendRequest[Unit](
-      NgrokApiClient.HttpMethod.Delete,
-      s"/reserved_domains/$id/http_endpoint_configuration",
-      List.empty,
-      Option.empty
-    )
-
-  /** Detach the https endpoint configuration attached to a reserved domain.
-    *
-    * See also <a href="https://ngrok.com/docs/api#api-reserved-domains-delete-https-endpoint-config">https://ngrok.com/docs/api#api-reserved-domains-delete-https-endpoint-config</a>.
-    *
-    * @param id a resource identifier
-    * @return a [[scala.concurrent.Future]] encapsulating the API call's result
-    */
-  def deleteHttpsEndpointConfig(
-    id: String
-  ): Future[Unit] =
-    apiClient.sendRequest[Unit](
-      NgrokApiClient.HttpMethod.Delete,
-      s"/reserved_domains/$id/https_endpoint_configuration",
       List.empty,
       Option.empty
     )

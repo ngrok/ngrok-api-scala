@@ -61,7 +61,7 @@ class EventSubscriptions private[ngrok] (apiClient: NgrokApiClient)(implicit ec:
     * @param metadata Arbitrary customer supplied information intended to be machine readable. Optional, max 4096 chars.
     * @param description Arbitrary customer supplied information intended to be human readable. Optional, max 255 chars.
     * @param sources Sources containing the types for which this event subscription will trigger
-    * @param destinationIds A list of Event Destination IDs which should be used for this Event Stream. Event Streams are required to have at least one Event Destination.
+    * @param destinationIds A list of Event Destination IDs which should be used for this Event Subscription.
     * @return a [[scala.concurrent.Future]] encapsulating the API call's result
     */
   def create(
@@ -150,7 +150,7 @@ class EventSubscriptions private[ngrok] (apiClient: NgrokApiClient)(implicit ec:
     * @param metadata Arbitrary customer supplied information intended to be machine readable. Optional, max 4096 chars.
     * @param description Arbitrary customer supplied information intended to be human readable. Optional, max 255 chars.
     * @param sources Sources containing the types for which this event subscription will trigger
-    * @param destinationIds A list of Event Destination IDs which should be used for this Event Stream. Event Streams are required to have at least one Event Destination.
+    * @param destinationIds A list of Event Destination IDs which should be used for this Event Subscription.
     * @return a [[scala.concurrent.Future]] encapsulating the API call's result
     */
   def update(

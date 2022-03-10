@@ -93,23 +93,15 @@ class Ngrok private (apiClient: NgrokApiClient)(implicit ec: ExecutionContext) {
     */
   lazy val credentials: Credentials = new Credentials(this.apiClient)
 
-  /** Endpoint Configurations are a reusable group of modules that encapsulate how
-    *  traffic to a domain or address is handled. Endpoint configurations are only
-    *  applied to Domains and TCP Addresses they have been attached to.
+  /** Endpoints provides an API for querying the endpoint objects
+    *  which define what tunnel or edge is used to serve a hostport.
+    *  Only active endpoints associated with a tunnel or backend are returned.
     *
-    * See also <a href="https://ngrok.com/docs/api#api-endpoint-configurations">https://ngrok.com/docs/api#api-endpoint-configurations</a>.
-    *
-    * @return a service client
-    */
-  lazy val endpointConfigurations: EndpointConfigurations = new EndpointConfigurations(this.apiClient)
-
-  /** Creates a service client for EventStreams.
-    *
-    * See also <a href="https://ngrok.com/docs/api#api-event-streams">https://ngrok.com/docs/api#api-event-streams</a>.
+    * See also <a href="https://ngrok.com/docs/api#api-endpoints">https://ngrok.com/docs/api#api-endpoints</a>.
     *
     * @return a service client
     */
-  lazy val eventStreams: EventStreams = new EventStreams(this.apiClient)
+  lazy val endpoints: Endpoints = new Endpoints(this.apiClient)
 
   /** Creates a service client for EventDestinations.
     *
@@ -157,7 +149,7 @@ class Ngrok private (apiClient: NgrokApiClient)(implicit ec: ExecutionContext) {
   lazy val ipPolicyRules: IpPolicyRules = new IpPolicyRules(this.apiClient)
 
   /** An IP restriction is a restriction placed on the CIDRs that are allowed to
-    *  initate traffic to a specific aspect of your ngrok account. An IP
+    *  initiate traffic to a specific aspect of your ngrok account. An IP
     *  restriction has a type which defines the ingress it applies to. IP
     *  restrictions can be used to enforce the source IPs that can make API
     *  requests, log in to the dashboard, start ngrok agents, and connect to your
@@ -259,110 +251,263 @@ class Ngrok private (apiClient: NgrokApiClient)(implicit ec: ExecutionContext) {
     */
   lazy val tunnels: Tunnels = new Tunnels(this.apiClient)
 
-  /** Creates a namespace object for PointcfgModule.
+  /** Creates a namespace object for Backends.
     *
     * @return a namespace object
     */
-  lazy val pointcfgModule: PointcfgModuleNamespace = new PointcfgModuleNamespace
+  lazy val backends: BackendsNamespace = new BackendsNamespace
 
-  /** A namespace object for PointcfgModule. */
-  class PointcfgModuleNamespace private[ngrok] () {
+  /** Creates a namespace object for Edges.
+    *
+    * @return a namespace object
+    */
+  lazy val edges: EdgesNamespace = new EdgesNamespace
 
-    /** Creates a service client for [[services.EndpointLoggingModule]].
+  /** Creates a namespace object for EdgeModules.
+    *
+    * @return a namespace object
+    */
+  lazy val edgeModules: EdgeModulesNamespace = new EdgeModulesNamespace
+
+  /** A namespace object for Backends. */
+  class BackendsNamespace private[ngrok] () {
+
+    /** A Failover backend defines failover behavior within a list of referenced
+      *  backends. Traffic is sent to the first backend in the list. If that backend
+      *  is offline or no connection can be established, ngrok attempts to connect to
+      *  the next backend in the list until one is successful.
       *
-      * See also <a href="https://ngrok.com/docs/api#api-endpoint-logging-module">https://ngrok.com/docs/api#api-endpoint-logging-module</a>
+      * See also <a href="https://ngrok.com/docs/api#api-failover-backends">https://ngrok.com/docs/api#api-failover-backends</a>
       *
       * @return a service client
       */
-    lazy val logging: EndpointLoggingModule = new EndpointLoggingModule(apiClient)
+    lazy val failover: FailoverBackends = new FailoverBackends(apiClient)
 
-    /** Creates a service client for [[services.EndpointCircuitBreakerModule]].
+    /** Creates a service client for [[services.HttpResponseBackends]].
       *
-      * See also <a href="https://ngrok.com/docs/api#api-endpoint-circuit-breaker-module">https://ngrok.com/docs/api#api-endpoint-circuit-breaker-module</a>
+      * See also <a href="https://ngrok.com/docs/api#api-http-response-backends">https://ngrok.com/docs/api#api-http-response-backends</a>
       *
       * @return a service client
       */
-    lazy val circuitBreaker: EndpointCircuitBreakerModule = new EndpointCircuitBreakerModule(apiClient)
+    lazy val httpResponse: HttpResponseBackends = new HttpResponseBackends(apiClient)
 
-    /** Creates a service client for [[services.EndpointCompressionModule]].
+    /** A Tunnel Group Backend balances traffic among all online tunnels that match
+      *  a label selector.
       *
-      * See also <a href="https://ngrok.com/docs/api#api-endpoint-compression-module">https://ngrok.com/docs/api#api-endpoint-compression-module</a>
+      * See also <a href="https://ngrok.com/docs/api#api-tunnel-group-backends">https://ngrok.com/docs/api#api-tunnel-group-backends</a>
       *
       * @return a service client
       */
-    lazy val compression: EndpointCompressionModule = new EndpointCompressionModule(apiClient)
+    lazy val tunnelGroup: TunnelGroupBackends = new TunnelGroupBackends(apiClient)
 
-    /** Creates a service client for [[services.EndpointTlsTerminationModule]].
+    /** A Weighted Backend balances traffic among the referenced backends. Traffic
+      *  is assigned proportionally to each based on its weight. The percentage of
+      *  traffic is calculated by dividing a backend's weight by the sum of all
+      *  weights.
       *
-      * See also <a href="https://ngrok.com/docs/api#api-endpoint-tls-termination-module">https://ngrok.com/docs/api#api-endpoint-tls-termination-module</a>
+      * See also <a href="https://ngrok.com/docs/api#api-weighted-backends">https://ngrok.com/docs/api#api-weighted-backends</a>
       *
       * @return a service client
       */
-    lazy val tlsTermination: EndpointTlsTerminationModule = new EndpointTlsTerminationModule(apiClient)
+    lazy val weighted: WeightedBackends = new WeightedBackends(apiClient)
 
-    /** Creates a service client for [[services.EndpointIpPolicyModule]].
+  }
+
+  /** A namespace object for Edges. */
+  class EdgesNamespace private[ngrok] () {
+
+    /** Creates a service client for [[services.EdgesHttpsRoutes]].
       *
-      * See also <a href="https://ngrok.com/docs/api#api-endpoint-ip-policy-module">https://ngrok.com/docs/api#api-endpoint-ip-policy-module</a>
+      * See also <a href="https://ngrok.com/docs/api#api-edges-https-routes">https://ngrok.com/docs/api#api-edges-https-routes</a>
       *
       * @return a service client
       */
-    lazy val ipPolicy: EndpointIpPolicyModule = new EndpointIpPolicyModule(apiClient)
+    lazy val httpsRoutes: EdgesHttpsRoutes = new EdgesHttpsRoutes(apiClient)
 
-    /** Creates a service client for [[services.EndpointMutualTlsModule]].
+    /** Creates a service client for [[services.EdgesHttps]].
       *
-      * See also <a href="https://ngrok.com/docs/api#api-endpoint-mutual-tls-module">https://ngrok.com/docs/api#api-endpoint-mutual-tls-module</a>
+      * See also <a href="https://ngrok.com/docs/api#api-edges-https">https://ngrok.com/docs/api#api-edges-https</a>
       *
       * @return a service client
       */
-    lazy val mutualTls: EndpointMutualTlsModule = new EndpointMutualTlsModule(apiClient)
+    lazy val https: EdgesHttps = new EdgesHttps(apiClient)
 
-    /** Creates a service client for [[services.EndpointRequestHeadersModule]].
+    /** Creates a service client for [[services.EdgesTcp]].
       *
-      * See also <a href="https://ngrok.com/docs/api#api-endpoint-request-headers-module">https://ngrok.com/docs/api#api-endpoint-request-headers-module</a>
+      * See also <a href="https://ngrok.com/docs/api#api-edges-tcp">https://ngrok.com/docs/api#api-edges-tcp</a>
       *
       * @return a service client
       */
-    lazy val requestHeaders: EndpointRequestHeadersModule = new EndpointRequestHeadersModule(apiClient)
+    lazy val tcp: EdgesTcp = new EdgesTcp(apiClient)
 
-    /** Creates a service client for [[services.EndpointResponseHeadersModule]].
+    /** Creates a service client for [[services.EdgesTls]].
       *
-      * See also <a href="https://ngrok.com/docs/api#api-endpoint-response-headers-module">https://ngrok.com/docs/api#api-endpoint-response-headers-module</a>
+      * See also <a href="https://ngrok.com/docs/api#api-edges-tls">https://ngrok.com/docs/api#api-edges-tls</a>
       *
       * @return a service client
       */
-    lazy val responseHeaders: EndpointResponseHeadersModule = new EndpointResponseHeadersModule(apiClient)
+    lazy val tls: EdgesTls = new EdgesTls(apiClient)
 
-    /** Creates a service client for [[services.EndpointOAuthModule]].
+  }
+
+  /** A namespace object for EdgeModules. */
+  class EdgeModulesNamespace private[ngrok] () {
+
+    /** Creates a service client for [[services.HttpsEdgeMutualTlsModule]].
       *
-      * See also <a href="https://ngrok.com/docs/api#api-endpoint-o-auth-module">https://ngrok.com/docs/api#api-endpoint-o-auth-module</a>
+      * See also <a href="https://ngrok.com/docs/api#api-https-edge-mutual-tls-module">https://ngrok.com/docs/api#api-https-edge-mutual-tls-module</a>
       *
       * @return a service client
       */
-    lazy val oauth: EndpointOAuthModule = new EndpointOAuthModule(apiClient)
+    lazy val httpsEdgeMutualTls: HttpsEdgeMutualTlsModule = new HttpsEdgeMutualTlsModule(apiClient)
 
-    /** Creates a service client for [[services.EndpointWebhookValidationModule]].
+    /** Creates a service client for [[services.HttpsEdgeTlsTerminationModule]].
       *
-      * See also <a href="https://ngrok.com/docs/api#api-endpoint-webhook-validation-module">https://ngrok.com/docs/api#api-endpoint-webhook-validation-module</a>
+      * See also <a href="https://ngrok.com/docs/api#api-https-edge-tls-termination-module">https://ngrok.com/docs/api#api-https-edge-tls-termination-module</a>
       *
       * @return a service client
       */
-    lazy val webhookValidation: EndpointWebhookValidationModule = new EndpointWebhookValidationModule(apiClient)
+    lazy val httpsEdgeTlsTermination: HttpsEdgeTlsTerminationModule = new HttpsEdgeTlsTerminationModule(apiClient)
 
-    /** Creates a service client for [[services.EndpointSamlModule]].
+    /** Creates a service client for [[services.EdgeRouteBackendModule]].
       *
-      * See also <a href="https://ngrok.com/docs/api#api-endpoint-saml-module">https://ngrok.com/docs/api#api-endpoint-saml-module</a>
+      * See also <a href="https://ngrok.com/docs/api#api-edge-route-backend-module">https://ngrok.com/docs/api#api-edge-route-backend-module</a>
       *
       * @return a service client
       */
-    lazy val saml: EndpointSamlModule = new EndpointSamlModule(apiClient)
+    lazy val httpsEdgeRouteBackend: EdgeRouteBackendModule = new EdgeRouteBackendModule(apiClient)
 
-    /** Creates a service client for [[services.EndpointOidcModule]].
+    /** Creates a service client for [[services.EdgeRouteIpRestrictionModule]].
       *
-      * See also <a href="https://ngrok.com/docs/api#api-endpoint-oidc-module">https://ngrok.com/docs/api#api-endpoint-oidc-module</a>
+      * See also <a href="https://ngrok.com/docs/api#api-edge-route-ip-restriction-module">https://ngrok.com/docs/api#api-edge-route-ip-restriction-module</a>
       *
       * @return a service client
       */
-    lazy val oidc: EndpointOidcModule = new EndpointOidcModule(apiClient)
+    lazy val httpsEdgeRouteIpRestriction: EdgeRouteIpRestrictionModule = new EdgeRouteIpRestrictionModule(apiClient)
+
+    /** Creates a service client for [[services.EdgeRouteRequestHeadersModule]].
+      *
+      * See also <a href="https://ngrok.com/docs/api#api-edge-route-request-headers-module">https://ngrok.com/docs/api#api-edge-route-request-headers-module</a>
+      *
+      * @return a service client
+      */
+    lazy val httpsEdgeRouteRequestHeaders: EdgeRouteRequestHeadersModule = new EdgeRouteRequestHeadersModule(apiClient)
+
+    /** Creates a service client for [[services.EdgeRouteResponseHeadersModule]].
+      *
+      * See also <a href="https://ngrok.com/docs/api#api-edge-route-response-headers-module">https://ngrok.com/docs/api#api-edge-route-response-headers-module</a>
+      *
+      * @return a service client
+      */
+    lazy val httpsEdgeRouteResponseHeaders: EdgeRouteResponseHeadersModule = new EdgeRouteResponseHeadersModule(
+      apiClient
+    )
+
+    /** Creates a service client for [[services.EdgeRouteCompressionModule]].
+      *
+      * See also <a href="https://ngrok.com/docs/api#api-edge-route-compression-module">https://ngrok.com/docs/api#api-edge-route-compression-module</a>
+      *
+      * @return a service client
+      */
+    lazy val httpsEdgeRouteCompression: EdgeRouteCompressionModule = new EdgeRouteCompressionModule(apiClient)
+
+    /** Creates a service client for [[services.EdgeRouteCircuitBreakerModule]].
+      *
+      * See also <a href="https://ngrok.com/docs/api#api-edge-route-circuit-breaker-module">https://ngrok.com/docs/api#api-edge-route-circuit-breaker-module</a>
+      *
+      * @return a service client
+      */
+    lazy val httpsEdgeRouteCircuitBreaker: EdgeRouteCircuitBreakerModule = new EdgeRouteCircuitBreakerModule(apiClient)
+
+    /** Creates a service client for [[services.EdgeRouteWebhookVerificationModule]].
+      *
+      * See also <a href="https://ngrok.com/docs/api#api-edge-route-webhook-verification-module">https://ngrok.com/docs/api#api-edge-route-webhook-verification-module</a>
+      *
+      * @return a service client
+      */
+    lazy val httpsEdgeRouteWebhookVerification: EdgeRouteWebhookVerificationModule =
+      new EdgeRouteWebhookVerificationModule(apiClient)
+
+    /** Creates a service client for [[services.EdgeRouteOAuthModule]].
+      *
+      * See also <a href="https://ngrok.com/docs/api#api-edge-route-o-auth-module">https://ngrok.com/docs/api#api-edge-route-o-auth-module</a>
+      *
+      * @return a service client
+      */
+    lazy val httpsEdgeRouteOauth: EdgeRouteOAuthModule = new EdgeRouteOAuthModule(apiClient)
+
+    /** Creates a service client for [[services.EdgeRouteSamlModule]].
+      *
+      * See also <a href="https://ngrok.com/docs/api#api-edge-route-saml-module">https://ngrok.com/docs/api#api-edge-route-saml-module</a>
+      *
+      * @return a service client
+      */
+    lazy val httpsEdgeRouteSaml: EdgeRouteSamlModule = new EdgeRouteSamlModule(apiClient)
+
+    /** Creates a service client for [[services.EdgeRouteOidcModule]].
+      *
+      * See also <a href="https://ngrok.com/docs/api#api-edge-route-oidc-module">https://ngrok.com/docs/api#api-edge-route-oidc-module</a>
+      *
+      * @return a service client
+      */
+    lazy val httpsEdgeRouteOidc: EdgeRouteOidcModule = new EdgeRouteOidcModule(apiClient)
+
+    /** Creates a service client for [[services.EdgeRouteWebsocketTcpConverterModule]].
+      *
+      * See also <a href="https://ngrok.com/docs/api#api-edge-route-websocket-tcp-converter-module">https://ngrok.com/docs/api#api-edge-route-websocket-tcp-converter-module</a>
+      *
+      * @return a service client
+      */
+    lazy val httpsEdgeRouteWebsocketTcpConverter: EdgeRouteWebsocketTcpConverterModule =
+      new EdgeRouteWebsocketTcpConverterModule(apiClient)
+
+    /** Creates a service client for [[services.TcpEdgeBackendModule]].
+      *
+      * See also <a href="https://ngrok.com/docs/api#api-tcp-edge-backend-module">https://ngrok.com/docs/api#api-tcp-edge-backend-module</a>
+      *
+      * @return a service client
+      */
+    lazy val tcpEdgeBackend: TcpEdgeBackendModule = new TcpEdgeBackendModule(apiClient)
+
+    /** Creates a service client for [[services.TcpEdgeIpRestrictionModule]].
+      *
+      * See also <a href="https://ngrok.com/docs/api#api-tcp-edge-ip-restriction-module">https://ngrok.com/docs/api#api-tcp-edge-ip-restriction-module</a>
+      *
+      * @return a service client
+      */
+    lazy val tcpEdgeIpRestriction: TcpEdgeIpRestrictionModule = new TcpEdgeIpRestrictionModule(apiClient)
+
+    /** Creates a service client for [[services.TlsEdgeBackendModule]].
+      *
+      * See also <a href="https://ngrok.com/docs/api#api-tls-edge-backend-module">https://ngrok.com/docs/api#api-tls-edge-backend-module</a>
+      *
+      * @return a service client
+      */
+    lazy val tlsEdgeBackend: TlsEdgeBackendModule = new TlsEdgeBackendModule(apiClient)
+
+    /** Creates a service client for [[services.TlsEdgeIpRestrictionModule]].
+      *
+      * See also <a href="https://ngrok.com/docs/api#api-tls-edge-ip-restriction-module">https://ngrok.com/docs/api#api-tls-edge-ip-restriction-module</a>
+      *
+      * @return a service client
+      */
+    lazy val tlsEdgeIpRestriction: TlsEdgeIpRestrictionModule = new TlsEdgeIpRestrictionModule(apiClient)
+
+    /** Creates a service client for [[services.TlsEdgeMutualTlsModule]].
+      *
+      * See also <a href="https://ngrok.com/docs/api#api-tls-edge-mutual-tls-module">https://ngrok.com/docs/api#api-tls-edge-mutual-tls-module</a>
+      *
+      * @return a service client
+      */
+    lazy val tlsEdgeMutualTls: TlsEdgeMutualTlsModule = new TlsEdgeMutualTlsModule(apiClient)
+
+    /** Creates a service client for [[services.TlsEdgeTlsTerminationModule]].
+      *
+      * See also <a href="https://ngrok.com/docs/api#api-tls-edge-tls-termination-module">https://ngrok.com/docs/api#api-tls-edge-tls-termination-module</a>
+      *
+      * @return a service client
+      */
+    lazy val tlsEdgeTlsTermination: TlsEdgeTlsTerminationModule = new TlsEdgeTlsTerminationModule(apiClient)
 
   }
 }

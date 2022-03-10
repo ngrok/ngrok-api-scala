@@ -9,16 +9,14 @@ import scala.concurrent.{ExecutionContext, Future}
 object IpPolicies {
   private case class IpPoliciesCreate(
     description: Option[String],
-    metadata: Option[String],
-    action: String
+    metadata: Option[String]
   )
 
   private object IpPoliciesCreate {
     implicit val encodeIpPoliciesCreate: Encoder[IpPoliciesCreate] = Encoder.encodeJsonObject.contramap(value =>
       List(
         value.description.map(_.asJson).map(("description", _)),
-        value.metadata.map(_.asJson).map(("metadata", _)),
-        Option(("action", value.action.asJson))
+        value.metadata.map(_.asJson).map(("metadata", _))
       ).flatten.toMap.asJsonObject
     )
   }
@@ -55,13 +53,11 @@ class IpPolicies private[ngrok] (apiClient: NgrokApiClient)(implicit ec: Executi
     *
     * See also <a href="https://ngrok.com/docs/api#api-ip-policies-create">https://ngrok.com/docs/api#api-ip-policies-create</a>.
     *
-    * @param action the IP policy action. Supported values are <code>allow</code> or <code>deny</code>
     * @param description human-readable description of the source IPs of this IP policy. optional, max 255 bytes.
     * @param metadata arbitrary user-defined machine-readable data of this IP policy. optional, max 4096 bytes.
     * @return a [[scala.concurrent.Future]] encapsulating the API call's result
     */
   def create(
-    action: String,
     description: Option[String] = None,
     metadata: Option[String] = None
   ): Future[IpPolicy] =
@@ -72,8 +68,7 @@ class IpPolicies private[ngrok] (apiClient: NgrokApiClient)(implicit ec: Executi
       Option(
         IpPoliciesCreate(
           description,
-          metadata,
-          action
+          metadata
         ).asJson
       )
     )
