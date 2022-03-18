@@ -10,8 +10,7 @@ object ReservedAddrs {
   private case class ReservedAddrsCreate(
     description: Option[String],
     metadata: Option[String],
-    region: Option[String],
-    endpointConfigurationId: Option[String]
+    region: Option[String]
   )
 
   private object ReservedAddrsCreate {
@@ -19,24 +18,21 @@ object ReservedAddrs {
       List(
         value.description.map(_.asJson).map(("description", _)),
         value.metadata.map(_.asJson).map(("metadata", _)),
-        value.region.map(_.asJson).map(("region", _)),
-        value.endpointConfigurationId.map(_.asJson).map(("endpoint_configuration_id", _))
+        value.region.map(_.asJson).map(("region", _))
       ).flatten.toMap.asJsonObject
     )
   }
 
   private case class ReservedAddrsUpdate(
     description: Option[String],
-    metadata: Option[String],
-    endpointConfigurationId: Option[String]
+    metadata: Option[String]
   )
 
   private object ReservedAddrsUpdate {
     implicit val encodeReservedAddrsUpdate: Encoder[ReservedAddrsUpdate] = Encoder.encodeJsonObject.contramap(value =>
       List(
         value.description.map(_.asJson).map(("description", _)),
-        value.metadata.map(_.asJson).map(("metadata", _)),
-        value.endpointConfigurationId.map(_.asJson).map(("endpoint_configuration_id", _))
+        value.metadata.map(_.asJson).map(("metadata", _))
       ).flatten.toMap.asJsonObject
     )
   }
@@ -59,14 +55,12 @@ class ReservedAddrs private[ngrok] (apiClient: NgrokApiClient)(implicit ec: Exec
     * @param description human-readable description of what this reserved address will be used for
     * @param metadata arbitrary user-defined machine-readable data of this reserved address. Optional, max 4096 bytes.
     * @param region reserve the address in this geographic ngrok datacenter. Optional, default is us. (au, eu, ap, us, jp, in, sa)
-    * @param endpointConfigurationId ID of an endpoint configuration of type tcp that will be used to handle inbound traffic to this address
     * @return a [[scala.concurrent.Future]] encapsulating the API call's result
     */
   def create(
     description: Option[String] = None,
     metadata: Option[String] = None,
-    region: Option[String] = None,
-    endpointConfigurationId: Option[String] = None
+    region: Option[String] = None
   ): Future[ReservedAddr] =
     apiClient.sendRequest[ReservedAddr](
       NgrokApiClient.HttpMethod.Post,
@@ -76,8 +70,7 @@ class ReservedAddrs private[ngrok] (apiClient: NgrokApiClient)(implicit ec: Exec
         ReservedAddrsCreate(
           description,
           metadata,
-          region,
-          endpointConfigurationId
+          region
         ).asJson
       )
     )
@@ -147,14 +140,12 @@ class ReservedAddrs private[ngrok] (apiClient: NgrokApiClient)(implicit ec: Exec
     * @param id the value of the <code>id</code> parameter as a [[scala.Predef.String]]
     * @param description human-readable description of what this reserved address will be used for
     * @param metadata arbitrary user-defined machine-readable data of this reserved address. Optional, max 4096 bytes.
-    * @param endpointConfigurationId ID of an endpoint configuration of type tcp that will be used to handle inbound traffic to this address
     * @return a [[scala.concurrent.Future]] encapsulating the API call's result
     */
   def update(
     id: String,
     description: Option[String] = None,
-    metadata: Option[String] = None,
-    endpointConfigurationId: Option[String] = None
+    metadata: Option[String] = None
   ): Future[ReservedAddr] =
     apiClient.sendRequest[ReservedAddr](
       NgrokApiClient.HttpMethod.Patch,
@@ -163,27 +154,9 @@ class ReservedAddrs private[ngrok] (apiClient: NgrokApiClient)(implicit ec: Exec
       Option(
         ReservedAddrsUpdate(
           description,
-          metadata,
-          endpointConfigurationId
+          metadata
         ).asJson
       )
-    )
-
-  /** Detach the endpoint configuration attached to a reserved address.
-    *
-    * See also <a href="https://ngrok.com/docs/api#api-reserved-addrs-delete-endpoint-config">https://ngrok.com/docs/api#api-reserved-addrs-delete-endpoint-config</a>.
-    *
-    * @param id a resource identifier
-    * @return a [[scala.concurrent.Future]] encapsulating the API call's result
-    */
-  def deleteEndpointConfig(
-    id: String
-  ): Future[Unit] =
-    apiClient.sendRequest[Unit](
-      NgrokApiClient.HttpMethod.Delete,
-      s"/reserved_addrs/$id/endpoint_configuration",
-      List.empty,
-      Option.empty
     )
 
 }

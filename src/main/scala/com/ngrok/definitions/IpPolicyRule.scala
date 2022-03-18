@@ -12,6 +12,7 @@ import io.circe.syntax._
   * @param metadata arbitrary user-defined machine-readable data of this IP policy rule. optional, max 4096 bytes.
   * @param cidr an IP or IP range specified in CIDR notation. IPv4 and IPv6 are both supported.
   * @param ipPolicy object describing the IP policy this IP Policy Rule belongs to
+  * @param action the action to apply to the policy rule, either <code>allow</code> or <code>deny</code>
   */
 final case class IpPolicyRule(
   id: String,
@@ -20,7 +21,8 @@ final case class IpPolicyRule(
   description: String,
   metadata: String,
   cidr: String,
-  ipPolicy: Ref
+  ipPolicy: Ref,
+  action: String
 )
 
 object IpPolicyRule {
@@ -32,7 +34,8 @@ object IpPolicyRule {
       Option(("description", value.description.asJson)),
       Option(("metadata", value.metadata.asJson)),
       Option(("cidr", value.cidr.asJson)),
-      Option(("ip_policy", value.ipPolicy.asJson))
+      Option(("ip_policy", value.ipPolicy.asJson)),
+      Option(("action", value.action.asJson))
     ).flatten.toMap.asJsonObject
   )
 
@@ -45,6 +48,7 @@ object IpPolicyRule {
       metadata    <- c.downField("metadata").as[String]
       cidr        <- c.downField("cidr").as[String]
       ipPolicy    <- c.downField("ip_policy").as[Ref]
+      action      <- c.downField("action").as[String]
     } yield IpPolicyRule(
       id,
       uri,
@@ -52,6 +56,7 @@ object IpPolicyRule {
       description,
       metadata,
       cidr,
-      ipPolicy
+      ipPolicy,
+      action
     )
 }

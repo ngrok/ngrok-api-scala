@@ -40,4 +40,21 @@ class Tunnels private[ngrok] (apiClient: NgrokApiClient)(implicit ec: ExecutionC
       )
       .map(new Page(apiClient, _))
 
+  /** Get the status of a tunnel by ID
+    *
+    * See also <a href="https://ngrok.com/docs/api#api-tunnels-get">https://ngrok.com/docs/api#api-tunnels-get</a>.
+    *
+    * @param id a resource identifier
+    * @return a [[scala.concurrent.Future]] encapsulating the API call's result
+    */
+  def get(
+    id: String
+  ): Future[Tunnel] =
+    apiClient.sendRequest[Tunnel](
+      NgrokApiClient.HttpMethod.Get,
+      s"/tunnels/$id",
+      List.empty,
+      Option.empty
+    )
+
 }
