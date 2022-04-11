@@ -59,7 +59,7 @@ class WeightedBackends private[ngrok] (apiClient: NgrokApiClient)(implicit ec: E
     *
     * @param description human-readable description of this backend. Optional
     * @param metadata arbitrary user-defined machine-readable data of this backend. Optional
-    * @param backends the ids of the child backends to their weights (0-10000)
+    * @param backends the ids of the child backends to their weights [0-10000]
     * @return a [[scala.concurrent.Future]] encapsulating the API call's result
     */
   def create(
@@ -80,7 +80,7 @@ class WeightedBackends private[ngrok] (apiClient: NgrokApiClient)(implicit ec: E
       )
     )
 
-  /** Delete a Weighted backend by ID. TODO what if used?
+  /** Delete a Weighted backend by ID.
     *
     * See also <a href="https://ngrok.com/docs/api#api-weighted-backends-delete">https://ngrok.com/docs/api#api-weighted-backends-delete</a>.
     *
@@ -145,7 +145,7 @@ class WeightedBackends private[ngrok] (apiClient: NgrokApiClient)(implicit ec: E
     * @param id the value of the <code>id</code> parameter as a [[scala.Predef.String]]
     * @param description human-readable description of this backend. Optional
     * @param metadata arbitrary user-defined machine-readable data of this backend. Optional
-    * @param backends the ids of the child backends to their weights (0-10000)
+    * @param backends the ids of the child backends to their weights [0-10000]
     * @return a [[scala.concurrent.Future]] encapsulating the API call's result
     */
   def update(

@@ -10,7 +10,7 @@ import io.circe.syntax._
   * @param createdAt timestamp when the backend was created, RFC 3339 format
   * @param description human-readable description of this backend. Optional
   * @param metadata arbitrary user-defined machine-readable data of this backend. Optional
-  * @param backends the ids of the child backends to their weights (0-10000)
+  * @param backends the ids of the child backends to their weights [0-10000]
   */
 final case class WeightedBackend(
   id: String,
