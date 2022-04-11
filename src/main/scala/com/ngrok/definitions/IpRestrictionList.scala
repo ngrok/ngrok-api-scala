@@ -6,7 +6,7 @@ import io.circe.syntax._
   *
   * @constructor create a new IpRestrictionList.
   * @param ipRestrictions the list of all IP restrictions on this account
-  * @param uri URI of the IP resrtrictions list API resource
+  * @param uri URI of the IP restrictions list API resource
   * @param nextPageUri URI of the next page, or null if there is no next page
   */
 final case class IpRestrictionList(

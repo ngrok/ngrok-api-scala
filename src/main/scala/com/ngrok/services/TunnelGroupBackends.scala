@@ -78,7 +78,7 @@ class TunnelGroupBackends private[ngrok] (apiClient: NgrokApiClient)(implicit ec
       )
     )
 
-  /** Delete a TunnelGroup backend by ID. TODO what if used?
+  /** Delete a TunnelGroup backend by ID.
     *
     * See also <a href="https://ngrok.com/docs/api#api-tunnel-group-backends-delete">https://ngrok.com/docs/api#api-tunnel-group-backends-delete</a>.
     *

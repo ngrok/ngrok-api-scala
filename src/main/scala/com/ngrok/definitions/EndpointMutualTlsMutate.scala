@@ -6,7 +6,7 @@ import io.circe.syntax._
   *
   * @constructor create a new EndpointMutualTlsMutate.
   * @param enabled <code>true</code> if the module will be applied to traffic, <code>false</code> to disable. default <code>true</code> if unspecified
-  * @param certificateAuthorityIds list of certificate authorities that will be used to validate the TLS client certificate presnted by the initiatiator of the TLS connection
+  * @param certificateAuthorityIds list of certificate authorities that will be used to validate the TLS client certificate presented by the initiator of the TLS connection
   */
 final case class EndpointMutualTlsMutate(
   enabled: Option[Boolean] = None,

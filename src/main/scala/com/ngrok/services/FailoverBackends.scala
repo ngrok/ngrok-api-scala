@@ -80,7 +80,7 @@ class FailoverBackends private[ngrok] (apiClient: NgrokApiClient)(implicit ec: E
       )
     )
 
-  /** Delete a Failover backend by ID. TODO what if used?
+  /** Delete a Failover backend by ID.
     *
     * See also <a href="https://ngrok.com/docs/api#api-failover-backends-delete">https://ngrok.com/docs/api#api-failover-backends-delete</a>.
     *
