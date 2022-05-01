@@ -10,9 +10,9 @@ object SshUserCertificates {
   private case class SshUserCertificatesCreate(
     sshCertificateAuthorityId: String,
     publicKey: String,
-    principals: Option[List[String]],
-    criticalOptions: Option[Map[String, String]],
-    extensions: Option[Map[String, String]],
+    principals: List[String],
+    criticalOptions: Map[String, String],
+    extensions: Map[String, String],
     validAfter: Option[java.time.OffsetDateTime],
     validUntil: Option[java.time.OffsetDateTime],
     description: Option[String],
@@ -25,9 +25,9 @@ object SshUserCertificates {
         List(
           Option(("ssh_certificate_authority_id", value.sshCertificateAuthorityId.asJson)),
           Option(("public_key", value.publicKey.asJson)),
-          value.principals.map(_.asJson).map(("principals", _)),
-          value.criticalOptions.map(_.asJson).map(("critical_options", _)),
-          value.extensions.map(_.asJson).map(("extensions", _)),
+          if (value.principals.isEmpty) None else Option(("principals", value.principals.asJson)),
+          if (value.criticalOptions.isEmpty) None else Option(("critical_options", value.criticalOptions.asJson)),
+          if (value.extensions.isEmpty) None else Option(("extensions", value.extensions.asJson)),
           value.validAfter.map(_.asJson).map(("valid_after", _)),
           value.validUntil.map(_.asJson).map(("valid_until", _)),
           value.description.map(_.asJson).map(("description", _)),
@@ -70,7 +70,7 @@ class SshUserCertificates private[ngrok] (apiClient: NgrokApiClient)(implicit ec
     * @param publicKey a public key in OpenSSH Authorized Keys format that this certificate signs
     * @param principals the list of principals included in the ssh user certificate. This is the list of usernames that the certificate holder may sign in as on a machine authorizing the signing certificate authority. Dangerously, if no principals are specified, this certificate may be used to log in as any user.
     * @param criticalOptions A map of critical options included in the certificate. Only two critical options are currently defined by OpenSSH: <code>force-command</code> and <code>source-address</code>. See <a href="https://github.com/openssh/openssh-portable/blob/master/PROTOCOL.certkeys">the OpenSSH certificate protocol spec</a> for additional details.
-    * @param extensions A map of extensions included in the certificate. Extensions are additional metadata that can be interpreted by the SSH server for any purpose. These can be used to permit or deny the ability to open a terminal, do port forwarding, x11 forwarding, and more. If unspecified, the certificate will include limited permissions with the following extension map: <code>{"permit-pty": "", "permit-user-rc": ""}</code> OpenSSH understands a number of predefined extensions. See <a href="https://github.com/openssh/openssh-portable/blob/master/PROTOCOL.certkeys">the OpenSSH certificate protocol spec</a> for additional details.
+    * @param extensions A map of extensions included in the certificate. Extensions are additional metadata that can be interpreted by the SSH server for any purpose. These can be used to permit or deny the ability to open a terminal, do port forwarding, x11 forwarding, and more. If unspecified, the certificate will include limited permissions with the following extension map: <code>{&#34;permit-pty&#34;: &#34;&#34;, &#34;permit-user-rc&#34;: &#34;&#34;}</code> OpenSSH understands a number of predefined extensions. See <a href="https://github.com/openssh/openssh-portable/blob/master/PROTOCOL.certkeys">the OpenSSH certificate protocol spec</a> for additional details.
     * @param validAfter The time when the user certificate becomes valid, in RFC 3339 format. Defaults to the current time if unspecified.
     * @param validUntil The time when this host certificate becomes invalid, in RFC 3339 format. If unspecified, a default value of 24 hours will be used. The OpenSSH certificates RFC calls this <code>valid_before</code>.
     * @param description human-readable description of this SSH User Certificate. optional, max 255 bytes.
@@ -80,9 +80,9 @@ class SshUserCertificates private[ngrok] (apiClient: NgrokApiClient)(implicit ec
   def create(
     sshCertificateAuthorityId: String,
     publicKey: String,
-    principals: Option[List[String]] = None,
-    criticalOptions: Option[Map[String, String]] = None,
-    extensions: Option[Map[String, String]] = None,
+    principals: List[String] = List.empty,
+    criticalOptions: Map[String, String] = Map.empty,
+    extensions: Map[String, String] = Map.empty,
     validAfter: Option[java.time.OffsetDateTime] = None,
     validUntil: Option[java.time.OffsetDateTime] = None,
     description: Option[String] = None,

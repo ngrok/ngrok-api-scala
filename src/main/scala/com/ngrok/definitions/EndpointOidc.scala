@@ -7,12 +7,12 @@ import io.circe.syntax._
   * @constructor create a new EndpointOidc.
   * @param enabled <code>true</code> if the module will be applied to traffic, <code>false</code> to disable. default <code>true</code> if unspecified
   * @param optionsPassthrough Do not enforce authentication on HTTP OPTIONS requests. necessary if you are supporting CORS.
-  * @param cookiePrefix the prefix of the session cookie that ngrok sets on the http client to cache authentication. default is 'ngrok.'
+  * @param cookiePrefix the prefix of the session cookie that ngrok sets on the http client to cache authentication. default is &#39;ngrok.&#39;
   * @param inactivityTimeout Integer number of seconds of inactivity after which if the user has not accessed the endpoint, their session will time out and they will be forced to reauthenticate.
   * @param maximumDuration Integer number of seconds of the maximum duration of an authenticated session. After this period is exceeded, a user must reauthenticate.
-  * @param issuer URL of the OIDC "OpenID provider". This is the base URL used for discovery.
-  * @param clientId The OIDC app's client ID and OIDC audience.
-  * @param clientSecret The OIDC app's client secret.
+  * @param issuer URL of the OIDC &#34;OpenID provider&#34;. This is the base URL used for discovery.
+  * @param clientId The OIDC app&#39;s client ID and OIDC audience.
+  * @param clientSecret The OIDC app&#39;s client secret.
   * @param scopes The set of scopes to request from the OIDC identity provider.
   */
 final case class EndpointOidc(
@@ -52,7 +52,7 @@ object EndpointOidc {
       issuer             <- c.downField("issuer").as[String]
       clientId           <- c.downField("client_id").as[String]
       clientSecret       <- c.downField("client_secret").as[String]
-      scopes             <- c.downField("scopes").as[List[String]]
+      scopes             <- c.downField("scopes").as[Option[List[String]]]
     } yield EndpointOidc(
       enabled,
       optionsPassthrough,
@@ -62,6 +62,6 @@ object EndpointOidc {
       issuer,
       clientId,
       clientSecret,
-      scopes
+      scopes.getOrElse(List.empty)
     )
 }

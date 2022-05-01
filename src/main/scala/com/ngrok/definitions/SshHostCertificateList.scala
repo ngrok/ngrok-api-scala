@@ -27,11 +27,11 @@ object SshHostCertificateList {
 
   implicit val decodeSshHostCertificateList: io.circe.Decoder[SshHostCertificateList] = (c: io.circe.HCursor) =>
     for {
-      sshHostCertificates <- c.downField("ssh_host_certificates").as[List[SshHostCertificate]]
+      sshHostCertificates <- c.downField("ssh_host_certificates").as[Option[List[SshHostCertificate]]]
       uri                 <- c.downField("uri").as[java.net.URI]
       nextPageUri         <- c.downField("next_page_uri").as[Option[java.net.URI]]
     } yield SshHostCertificateList(
-      sshHostCertificates,
+      sshHostCertificates.getOrElse(List.empty),
       uri,
       nextPageUri
     )

@@ -26,11 +26,11 @@ object EndpointList {
 
   implicit val decodeEndpointList: io.circe.Decoder[EndpointList] = (c: io.circe.HCursor) =>
     for {
-      endpoints   <- c.downField("endpoints").as[List[Endpoint]]
+      endpoints   <- c.downField("endpoints").as[Option[List[Endpoint]]]
       uri         <- c.downField("uri").as[java.net.URI]
       nextPageUri <- c.downField("next_page_uri").as[Option[java.net.URI]]
     } yield EndpointList(
-      endpoints,
+      endpoints.getOrElse(List.empty),
       uri,
       nextPageUri
     )

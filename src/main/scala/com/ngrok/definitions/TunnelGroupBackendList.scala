@@ -27,11 +27,11 @@ object TunnelGroupBackendList {
 
   implicit val decodeTunnelGroupBackendList: io.circe.Decoder[TunnelGroupBackendList] = (c: io.circe.HCursor) =>
     for {
-      backends    <- c.downField("backends").as[List[TunnelGroupBackend]]
+      backends    <- c.downField("backends").as[Option[List[TunnelGroupBackend]]]
       uri         <- c.downField("uri").as[java.net.URI]
       nextPageUri <- c.downField("next_page_uri").as[Option[java.net.URI]]
     } yield TunnelGroupBackendList(
-      backends,
+      backends.getOrElse(List.empty),
       uri,
       nextPageUri
     )

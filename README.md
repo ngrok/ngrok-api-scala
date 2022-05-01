@@ -29,7 +29,7 @@ If using Maven, in your `pom.xml` file, add:
 <dependencies>
   <dependency>
     <groupId>com.ngrok</groupId>
-    <artifactId>ngrok-api-scala</artifactId>
+    <artifactId>ngrok-api-scala_${scala.compat.version}</artifactId>
     <version>${ngrok-api-scala.version}</version>
   </dependency>
 </dependencies>
@@ -80,9 +80,9 @@ class Example extends App {
   val ngrok = Ngrok()
 
   Await.result(
-    ngrok.ipPolicies.create(Some("allow")).flatMap(policy =>
+    ngrok.ipPolicies.create().flatMap(policy =>
       List("24.0.0.0/8", "12.0.0.0/8").traverse(
-        cidr => ngrok.ipPolicyRules.create(cidr, policy.id)
+        cidr => ngrok.ipPolicyRules.create(cidr, policy.id, "allow")
       )
     ),
     1.second

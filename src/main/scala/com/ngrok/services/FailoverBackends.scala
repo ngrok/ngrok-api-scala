@@ -10,7 +10,7 @@ object FailoverBackends {
   private case class FailoverBackendsCreate(
     description: Option[String],
     metadata: Option[String],
-    backends: Option[List[String]]
+    backends: List[String]
   )
 
   private object FailoverBackendsCreate {
@@ -19,7 +19,7 @@ object FailoverBackends {
         List(
           value.description.map(_.asJson).map(("description", _)),
           value.metadata.map(_.asJson).map(("metadata", _)),
-          value.backends.map(_.asJson).map(("backends", _))
+          if (value.backends.isEmpty) None else Option(("backends", value.backends.asJson))
         ).flatten.toMap.asJsonObject
       )
   }
@@ -27,7 +27,7 @@ object FailoverBackends {
   private case class FailoverBackendsUpdate(
     description: Option[String],
     metadata: Option[String],
-    backends: Option[List[String]]
+    backends: List[String]
   )
 
   private object FailoverBackendsUpdate {
@@ -36,7 +36,7 @@ object FailoverBackends {
         List(
           value.description.map(_.asJson).map(("description", _)),
           value.metadata.map(_.asJson).map(("metadata", _)),
-          value.backends.map(_.asJson).map(("backends", _))
+          if (value.backends.isEmpty) None else Option(("backends", value.backends.asJson))
         ).flatten.toMap.asJsonObject
       )
   }
@@ -65,7 +65,7 @@ class FailoverBackends private[ngrok] (apiClient: NgrokApiClient)(implicit ec: E
   def create(
     description: Option[String] = None,
     metadata: Option[String] = None,
-    backends: Option[List[String]] = None
+    backends: List[String] = List.empty
   ): Future[FailoverBackend] =
     apiClient.sendRequest[FailoverBackend](
       NgrokApiClient.HttpMethod.Post,
@@ -152,7 +152,7 @@ class FailoverBackends private[ngrok] (apiClient: NgrokApiClient)(implicit ec: E
     id: String,
     description: Option[String] = None,
     metadata: Option[String] = None,
-    backends: Option[List[String]] = None
+    backends: List[String] = List.empty
   ): Future[FailoverBackend] =
     apiClient.sendRequest[FailoverBackend](
       NgrokApiClient.HttpMethod.Patch,

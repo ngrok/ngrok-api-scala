@@ -10,7 +10,7 @@ object Credentials {
   private case class CredentialsCreate(
     description: Option[String],
     metadata: Option[String],
-    acl: Option[List[String]]
+    acl: List[String]
   )
 
   private object CredentialsCreate {
@@ -18,7 +18,7 @@ object Credentials {
       List(
         value.description.map(_.asJson).map(("description", _)),
         value.metadata.map(_.asJson).map(("metadata", _)),
-        value.acl.map(_.asJson).map(("acl", _))
+        if (value.acl.isEmpty) None else Option(("acl", value.acl.asJson))
       ).flatten.toMap.asJsonObject
     )
   }
@@ -26,7 +26,7 @@ object Credentials {
   private case class CredentialsUpdate(
     description: Option[String],
     metadata: Option[String],
-    acl: Option[List[String]]
+    acl: List[String]
   )
 
   private object CredentialsUpdate {
@@ -34,7 +34,7 @@ object Credentials {
       List(
         value.description.map(_.asJson).map(("description", _)),
         value.metadata.map(_.asJson).map(("metadata", _)),
-        value.acl.map(_.asJson).map(("acl", _))
+        if (value.acl.isEmpty) None else Option(("acl", value.acl.asJson))
       ).flatten.toMap.asJsonObject
     )
   }
@@ -43,7 +43,7 @@ object Credentials {
 
 /** Tunnel Credentials are ngrok agent authtokens. They authorize the ngrok
   *  agent to connect the ngrok service as your account. They are installed with
-  *  the <code>ngrok authtoken</code> command or by specifying it in the
+  *  the <code>ngrok config add-authtoken</code> command or by specifying it in the
   * <code>ngrok.yml</code>
   *  configuration file with the <code>authtoken</code> property.
   *
@@ -61,13 +61,13 @@ class Credentials private[ngrok] (apiClient: NgrokApiClient)(implicit ec: Execut
     *
     * @param description human-readable description of who or what will use the credential to authenticate. Optional, max 255 bytes.
     * @param metadata arbitrary user-defined machine-readable data of this credential. Optional, max 4096 bytes.
-    * @param acl optional list of ACL rules. If unspecified, the credential will have no restrictions. The only allowed ACL rule at this time is the <code>bind</code> rule. The <code>bind</code> rule allows the caller to restrict what domains and addresses the token is allowed to bind. For example, to allow the token to open a tunnel on example.ngrok.io your ACL would include the rule <code>bind:example.ngrok.io</code>. Bind rules may specify a leading wildcard to match multiple domains with a common suffix. For example, you may specify a rule of <code>bind:*.example.com</code> which will allow <code>x.example.com</code>, <code>y.example.com</code>, <code>*.example.com</code>, etc. A rule of <code>'*'</code> is equivalent to no acl at all and will explicitly permit all actions.
+    * @param acl optional list of ACL rules. If unspecified, the credential will have no restrictions. The only allowed ACL rule at this time is the <code>bind</code> rule. The <code>bind</code> rule allows the caller to restrict what domains and addresses the token is allowed to bind. For example, to allow the token to open a tunnel on example.ngrok.io your ACL would include the rule <code>bind:example.ngrok.io</code>. Bind rules may specify a leading wildcard to match multiple domains with a common suffix. For example, you may specify a rule of <code>bind:*.example.com</code> which will allow <code>x.example.com</code>, <code>y.example.com</code>, <code>*.example.com</code>, etc. A rule of <code>&#39;*&#39;</code> is equivalent to no acl at all and will explicitly permit all actions.
     * @return a [[scala.concurrent.Future]] encapsulating the API call's result
     */
   def create(
     description: Option[String] = None,
     metadata: Option[String] = None,
-    acl: Option[List[String]] = None
+    acl: List[String] = List.empty
   ): Future[Credential] =
     apiClient.sendRequest[Credential](
       NgrokApiClient.HttpMethod.Post,
@@ -147,14 +147,14 @@ class Credentials private[ngrok] (apiClient: NgrokApiClient)(implicit ec: Execut
     * @param id the value of the <code>id</code> parameter as a [[scala.Predef.String]]
     * @param description human-readable description of who or what will use the credential to authenticate. Optional, max 255 bytes.
     * @param metadata arbitrary user-defined machine-readable data of this credential. Optional, max 4096 bytes.
-    * @param acl optional list of ACL rules. If unspecified, the credential will have no restrictions. The only allowed ACL rule at this time is the <code>bind</code> rule. The <code>bind</code> rule allows the caller to restrict what domains and addresses the token is allowed to bind. For example, to allow the token to open a tunnel on example.ngrok.io your ACL would include the rule <code>bind:example.ngrok.io</code>. Bind rules may specify a leading wildcard to match multiple domains with a common suffix. For example, you may specify a rule of <code>bind:*.example.com</code> which will allow <code>x.example.com</code>, <code>y.example.com</code>, <code>*.example.com</code>, etc. A rule of <code>'*'</code> is equivalent to no acl at all and will explicitly permit all actions.
+    * @param acl optional list of ACL rules. If unspecified, the credential will have no restrictions. The only allowed ACL rule at this time is the <code>bind</code> rule. The <code>bind</code> rule allows the caller to restrict what domains and addresses the token is allowed to bind. For example, to allow the token to open a tunnel on example.ngrok.io your ACL would include the rule <code>bind:example.ngrok.io</code>. Bind rules may specify a leading wildcard to match multiple domains with a common suffix. For example, you may specify a rule of <code>bind:*.example.com</code> which will allow <code>x.example.com</code>, <code>y.example.com</code>, <code>*.example.com</code>, etc. A rule of <code>&#39;*&#39;</code> is equivalent to no acl at all and will explicitly permit all actions.
     * @return a [[scala.concurrent.Future]] encapsulating the API call's result
     */
   def update(
     id: String,
     description: Option[String] = None,
     metadata: Option[String] = None,
-    acl: Option[List[String]] = None
+    acl: List[String] = List.empty
   ): Future[Credential] =
     apiClient.sendRequest[Credential](
       NgrokApiClient.HttpMethod.Patch,

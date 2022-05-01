@@ -24,10 +24,10 @@ object TlsCertificateSaNs {
 
   implicit val decodeTlsCertificateSaNs: io.circe.Decoder[TlsCertificateSaNs] = (c: io.circe.HCursor) =>
     for {
-      dnsNames <- c.downField("dns_names").as[List[String]]
-      ips      <- c.downField("ips").as[List[String]]
+      dnsNames <- c.downField("dns_names").as[Option[List[String]]]
+      ips      <- c.downField("ips").as[Option[List[String]]]
     } yield TlsCertificateSaNs(
-      dnsNames,
-      ips
+      dnsNames.getOrElse(List.empty),
+      ips.getOrElse(List.empty)
     )
 }

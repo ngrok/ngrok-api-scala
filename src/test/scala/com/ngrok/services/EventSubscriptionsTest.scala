@@ -116,7 +116,7 @@ class EventSubscriptionsTest
       wireMock.stubFor(
         post(urlPathEqualTo("/event_destinations"))
           .withHeader(HttpHeaderNames.AUTHORIZATION.toString, equalTo(s"Bearer $FakeApiSecret"))
-          .withHeader(HttpHeaderNames.USER_AGENT.toString, equalTo(s"ngrok-api-client-scala/${Version.ClientVersion}"))
+          .withHeader(HttpHeaderNames.USER_AGENT.toString, equalTo(UserAgent))
           .withHeader("ngrok-version", equalTo(Version.ApiVersion))
           .withHeader(HttpHeaderNames.CONTENT_TYPE.toString, containing("application/json"))
           .withRequestBody(equalToJson(eventDestinationCreate.asJson.noSpaces))
@@ -129,7 +129,7 @@ class EventSubscriptionsTest
       wireMock.stubFor(
         delete(urlPathEqualTo(s"/event_destinations/${eventDestination.id}"))
           .withHeader(HttpHeaderNames.AUTHORIZATION.toString, equalTo(s"Bearer $FakeApiSecret"))
-          .withHeader(HttpHeaderNames.USER_AGENT.toString, equalTo(s"ngrok-api-client-scala/${Version.ClientVersion}"))
+          .withHeader(HttpHeaderNames.USER_AGENT.toString, equalTo(UserAgent))
           .withHeader("ngrok-version", equalTo(Version.ApiVersion))
           .willReturn(noContent)
       )
@@ -137,7 +137,7 @@ class EventSubscriptionsTest
       wireMock.stubFor(
         post(urlPathEqualTo("/event_subscriptions"))
           .withHeader(HttpHeaderNames.AUTHORIZATION.toString, equalTo(s"Bearer $FakeApiSecret"))
-          .withHeader(HttpHeaderNames.USER_AGENT.toString, equalTo(s"ngrok-api-client-scala/${Version.ClientVersion}"))
+          .withHeader(HttpHeaderNames.USER_AGENT.toString, equalTo(UserAgent))
           .withHeader("ngrok-version", equalTo(Version.ApiVersion))
           .withHeader(HttpHeaderNames.CONTENT_TYPE.toString, containing("application/json"))
           .withRequestBody(equalToJson(eventSubscriptionCreate.asJson.noSpaces))
@@ -149,7 +149,7 @@ class EventSubscriptionsTest
       wireMock.stubFor(
         get(urlPathEqualTo(s"/event_subscriptions/${eventSubscription.id}"))
           .withHeader(HttpHeaderNames.AUTHORIZATION.toString, equalTo(s"Bearer $FakeApiSecret"))
-          .withHeader(HttpHeaderNames.USER_AGENT.toString, equalTo(s"ngrok-api-client-scala/${Version.ClientVersion}"))
+          .withHeader(HttpHeaderNames.USER_AGENT.toString, equalTo(UserAgent))
           .withHeader("ngrok-version", equalTo(Version.ApiVersion))
           .willReturn(
             ok(eventSubscription.asJson.noSpaces).withHeader(HttpHeaderNames.CONTENT_TYPE.toString, "application/json")
@@ -160,7 +160,7 @@ class EventSubscriptionsTest
         get(urlPathEqualTo("/event_subscriptions"))
           .withQueryParam("limit", equalTo("10"))
           .withHeader(HttpHeaderNames.AUTHORIZATION.toString, equalTo(s"Bearer $FakeApiSecret"))
-          .withHeader(HttpHeaderNames.USER_AGENT.toString, equalTo(s"ngrok-api-client-scala/${Version.ClientVersion}"))
+          .withHeader(HttpHeaderNames.USER_AGENT.toString, equalTo(UserAgent))
           .withHeader("ngrok-version", equalTo(Version.ApiVersion))
           .willReturn(
             ok(eventSubscriptionList.asJson.noSpaces)
@@ -171,7 +171,7 @@ class EventSubscriptionsTest
       wireMock.stubFor(
         patch(urlPathEqualTo(s"/event_subscriptions/${eventSubscription.id}"))
           .withHeader(HttpHeaderNames.AUTHORIZATION.toString, equalTo(s"Bearer $FakeApiSecret"))
-          .withHeader(HttpHeaderNames.USER_AGENT.toString, equalTo(s"ngrok-api-client-scala/${Version.ClientVersion}"))
+          .withHeader(HttpHeaderNames.USER_AGENT.toString, equalTo(UserAgent))
           .withHeader("ngrok-version", equalTo(Version.ApiVersion))
           .withHeader(HttpHeaderNames.CONTENT_TYPE.toString, containing("application/json"))
           .withRequestBody(equalToJson(eventSubscriptionUpdate.asJson.noSpaces))
@@ -184,7 +184,7 @@ class EventSubscriptionsTest
       wireMock.stubFor(
         delete(urlPathEqualTo(s"/event_subscriptions/${eventSubscription.id}"))
           .withHeader(HttpHeaderNames.AUTHORIZATION.toString, equalTo(s"Bearer $FakeApiSecret"))
-          .withHeader(HttpHeaderNames.USER_AGENT.toString, equalTo(s"ngrok-api-client-scala/${Version.ClientVersion}"))
+          .withHeader(HttpHeaderNames.USER_AGENT.toString, equalTo(UserAgent))
           .withHeader("ngrok-version", equalTo(Version.ApiVersion))
           .willReturn(noContent)
       )
@@ -222,8 +222,8 @@ class EventSubscriptionsTest
       .create(
         description = Some(eventSubscription.description),
         metadata = Some(eventSubscription.metadata),
-        sources = Some(eventSubscription.sources.map(source => EventSourceReplace(source.`type`))),
-        destinationIds = Some(eventDestinationIds)
+        sources = eventSubscription.sources.map(source => EventSourceReplace(source.`type`)),
+        destinationIds = eventDestinationIds
       )
       .futureValue
     assertEventSubscriptionFields(createdEventSubscription)

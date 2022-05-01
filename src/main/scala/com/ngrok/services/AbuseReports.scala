@@ -24,7 +24,7 @@ object AbuseReports {
 }
 
 /** Abuse Reports allow you to submit take-down requests for URLs hosted by
-  *  ngrok that violate ngrok's terms of service.
+  *  ngrok that violate ngrok&#39;s terms of service.
   *
   * See also <a href="https://ngrok.com/docs/api#api-abuse-reports">https://ngrok.com/docs/api#api-abuse-reports</a>.
   */

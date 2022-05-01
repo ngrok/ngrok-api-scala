@@ -62,7 +62,7 @@ object SshHostCertificate {
       publicKey                 <- c.downField("public_key").as[String]
       keyType                   <- c.downField("key_type").as[String]
       sshCertificateAuthorityId <- c.downField("ssh_certificate_authority_id").as[String]
-      principals                <- c.downField("principals").as[List[String]]
+      principals                <- c.downField("principals").as[Option[List[String]]]
       validAfter                <- c.downField("valid_after").as[java.time.OffsetDateTime]
       validUntil                <- c.downField("valid_until").as[java.time.OffsetDateTime]
       certificate               <- c.downField("certificate").as[String]
@@ -75,7 +75,7 @@ object SshHostCertificate {
       publicKey,
       keyType,
       sshCertificateAuthorityId,
-      principals,
+      principals.getOrElse(List.empty),
       validAfter,
       validUntil,
       certificate

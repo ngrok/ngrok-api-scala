@@ -27,11 +27,11 @@ object EventSubscriptionList {
 
   implicit val decodeEventSubscriptionList: io.circe.Decoder[EventSubscriptionList] = (c: io.circe.HCursor) =>
     for {
-      eventSubscriptions <- c.downField("event_subscriptions").as[List[EventSubscription]]
+      eventSubscriptions <- c.downField("event_subscriptions").as[Option[List[EventSubscription]]]
       uri                <- c.downField("uri").as[java.net.URI]
       nextPageUri        <- c.downField("next_page_uri").as[Option[java.net.URI]]
     } yield EventSubscriptionList(
-      eventSubscriptions,
+      eventSubscriptions.getOrElse(List.empty),
       uri,
       nextPageUri
     )

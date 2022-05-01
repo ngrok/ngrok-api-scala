@@ -8,8 +8,8 @@ import io.circe.syntax._
   * @param edgeId unique identifier of this edge
   * @param id unique identifier of this edge route
   * @param createdAt timestamp when the edge configuration was created, RFC 3339 format
-  * @param matchType Type of match to use for this route. Valid values are "exact_path" and "path_prefix".
-  * @param `match` Route selector: "/blog" or "example.com" or "example.com/blog"
+  * @param matchType Type of match to use for this route. Valid values are &#34;exact_path&#34; and &#34;path_prefix&#34;.
+  * @param `match` Route selector: &#34;/blog&#34; or &#34;example.com&#34; or &#34;example.com/blog&#34;
   * @param uri URI of the edge API resource
   * @param description human-readable description of what this edge will be used for; optional, max 255 bytes.
   * @param metadata arbitrary user-defined machine-readable data of this edge. Optional, max 4096 bytes.
@@ -28,10 +28,10 @@ import io.circe.syntax._
 final case class HttpsEdgeRoute(
   edgeId: String,
   id: String,
-  createdAt: String,
+  createdAt: java.time.OffsetDateTime,
   matchType: String,
   `match`: String,
-  uri: String,
+  uri: java.net.URI,
   description: String,
   metadata: String,
   backend: Option[EndpointBackend] = None,
@@ -77,10 +77,10 @@ object HttpsEdgeRoute {
     for {
       edgeId                <- c.downField("edge_id").as[String]
       id                    <- c.downField("id").as[String]
-      createdAt             <- c.downField("created_at").as[String]
+      createdAt             <- c.downField("created_at").as[java.time.OffsetDateTime]
       matchType             <- c.downField("match_type").as[String]
       `match`               <- c.downField("match").as[String]
-      uri                   <- c.downField("uri").as[String]
+      uri                   <- c.downField("uri").as[java.net.URI]
       description           <- c.downField("description").as[String]
       metadata              <- c.downField("metadata").as[String]
       backend               <- c.downField("backend").as[Option[EndpointBackend]]

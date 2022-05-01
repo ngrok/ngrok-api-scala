@@ -28,11 +28,11 @@ object EndpointRequestHeaders {
   implicit val decodeEndpointRequestHeaders: io.circe.Decoder[EndpointRequestHeaders] = (c: io.circe.HCursor) =>
     for {
       enabled <- c.downField("enabled").as[Option[Boolean]]
-      add     <- c.downField("add").as[Map[String, String]]
-      remove  <- c.downField("remove").as[List[String]]
+      add     <- c.downField("add").as[Option[Map[String, String]]]
+      remove  <- c.downField("remove").as[Option[List[String]]]
     } yield EndpointRequestHeaders(
       enabled,
-      add,
-      remove
+      add.getOrElse(Map.empty),
+      remove.getOrElse(List.empty)
     )
 }

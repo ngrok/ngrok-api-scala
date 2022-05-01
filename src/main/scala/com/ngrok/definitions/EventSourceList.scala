@@ -24,10 +24,10 @@ object EventSourceList {
 
   implicit val decodeEventSourceList: io.circe.Decoder[EventSourceList] = (c: io.circe.HCursor) =>
     for {
-      sources <- c.downField("sources").as[List[EventSource]]
+      sources <- c.downField("sources").as[Option[List[EventSource]]]
       uri     <- c.downField("uri").as[java.net.URI]
     } yield EventSourceList(
-      sources,
+      sources.getOrElse(List.empty),
       uri
     )
 }

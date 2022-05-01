@@ -25,9 +25,9 @@ object EndpointMutualTlsMutate {
   implicit val decodeEndpointMutualTlsMutate: io.circe.Decoder[EndpointMutualTlsMutate] = (c: io.circe.HCursor) =>
     for {
       enabled                 <- c.downField("enabled").as[Option[Boolean]]
-      certificateAuthorityIds <- c.downField("certificate_authority_ids").as[List[String]]
+      certificateAuthorityIds <- c.downField("certificate_authority_ids").as[Option[List[String]]]
     } yield EndpointMutualTlsMutate(
       enabled,
-      certificateAuthorityIds
+      certificateAuthorityIds.getOrElse(List.empty)
     )
 }

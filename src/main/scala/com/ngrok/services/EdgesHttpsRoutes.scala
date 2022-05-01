@@ -103,8 +103,8 @@ class EdgesHttpsRoutes private[ngrok] (apiClient: NgrokApiClient)(implicit ec: E
     * See also <a href="https://ngrok.com/docs/api#api-edges-https-routes-create">https://ngrok.com/docs/api#api-edges-https-routes-create</a>.
     *
     * @param edgeId unique identifier of this edge
-    * @param matchType Type of match to use for this route. Valid values are "exact_path" and "path_prefix".
-    * @param `match` Route selector: "/blog" or "example.com" or "example.com/blog"
+    * @param matchType Type of match to use for this route. Valid values are &#34;exact_path&#34; and &#34;path_prefix&#34;.
+    * @param `match` Route selector: &#34;/blog&#34; or &#34;example.com&#34; or &#34;example.com/blog&#34;
     * @param description human-readable description of what this edge will be used for; optional, max 255 bytes.
     * @param metadata arbitrary user-defined machine-readable data of this edge. Optional, max 4096 bytes.
     * @param backend backend module configuration or <code>null</code>
@@ -191,8 +191,8 @@ class EdgesHttpsRoutes private[ngrok] (apiClient: NgrokApiClient)(implicit ec: E
     *
     * @param edgeId unique identifier of this edge
     * @param id unique identifier of this edge route
-    * @param matchType Type of match to use for this route. Valid values are "exact_path" and "path_prefix".
-    * @param `match` Route selector: "/blog" or "example.com" or "example.com/blog"
+    * @param matchType Type of match to use for this route. Valid values are &#34;exact_path&#34; and &#34;path_prefix&#34;.
+    * @param `match` Route selector: &#34;/blog&#34; or &#34;example.com&#34; or &#34;example.com/blog&#34;
     * @param description human-readable description of what this edge will be used for; optional, max 255 bytes.
     * @param metadata arbitrary user-defined machine-readable data of this edge. Optional, max 4096 bytes.
     * @param backend backend module configuration or <code>null</code>

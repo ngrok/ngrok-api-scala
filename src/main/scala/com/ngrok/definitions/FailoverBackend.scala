@@ -14,7 +14,7 @@ import io.circe.syntax._
   */
 final case class FailoverBackend(
   id: String,
-  uri: String,
+  uri: java.net.URI,
   createdAt: java.time.OffsetDateTime,
   description: String,
   metadata: String,
@@ -37,17 +37,17 @@ object FailoverBackend {
   implicit val decodeFailoverBackend: io.circe.Decoder[FailoverBackend] = (c: io.circe.HCursor) =>
     for {
       id          <- c.downField("id").as[String]
-      uri         <- c.downField("uri").as[String]
+      uri         <- c.downField("uri").as[java.net.URI]
       createdAt   <- c.downField("created_at").as[java.time.OffsetDateTime]
       description <- c.downField("description").as[String]
       metadata    <- c.downField("metadata").as[String]
-      backends    <- c.downField("backends").as[List[String]]
+      backends    <- c.downField("backends").as[Option[List[String]]]
     } yield FailoverBackend(
       id,
       uri,
       createdAt,
       description,
       metadata,
-      backends
+      backends.getOrElse(List.empty)
     )
 }

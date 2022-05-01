@@ -10,7 +10,7 @@ object EdgesHttps {
   private case class EdgesHttpsCreate(
     description: Option[String],
     metadata: Option[String],
-    hostports: Option[List[String]],
+    hostports: List[String],
     mutualTls: Option[EndpointMutualTlsMutate],
     tlsTermination: Option[EndpointTlsTerminationAtEdge]
   )
@@ -20,7 +20,7 @@ object EdgesHttps {
       List(
         value.description.map(_.asJson).map(("description", _)),
         value.metadata.map(_.asJson).map(("metadata", _)),
-        value.hostports.map(_.asJson).map(("hostports", _)),
+        if (value.hostports.isEmpty) None else Option(("hostports", value.hostports.asJson)),
         value.mutualTls.map(_.asJson).map(("mutual_tls", _)),
         value.tlsTermination.map(_.asJson).map(("tls_termination", _))
       ).flatten.toMap.asJsonObject
@@ -30,7 +30,7 @@ object EdgesHttps {
   private case class EdgesHttpsUpdate(
     description: Option[String],
     metadata: Option[String],
-    hostports: Option[List[String]],
+    hostports: List[String],
     mutualTls: Option[EndpointMutualTlsMutate],
     tlsTermination: Option[EndpointTlsTerminationAtEdge]
   )
@@ -40,7 +40,7 @@ object EdgesHttps {
       List(
         value.description.map(_.asJson).map(("description", _)),
         value.metadata.map(_.asJson).map(("metadata", _)),
-        value.hostports.map(_.asJson).map(("hostports", _)),
+        if (value.hostports.isEmpty) None else Option(("hostports", value.hostports.asJson)),
         value.mutualTls.map(_.asJson).map(("mutual_tls", _)),
         value.tlsTermination.map(_.asJson).map(("tls_termination", _))
       ).flatten.toMap.asJsonObject
@@ -70,7 +70,7 @@ class EdgesHttps private[ngrok] (apiClient: NgrokApiClient)(implicit ec: Executi
   def create(
     description: Option[String] = None,
     metadata: Option[String] = None,
-    hostports: Option[List[String]] = None,
+    hostports: List[String] = List.empty,
     mutualTls: Option[EndpointMutualTlsMutate] = None,
     tlsTermination: Option[EndpointTlsTerminationAtEdge] = None
   ): Future[HttpsEdge] =
@@ -149,7 +149,7 @@ class EdgesHttps private[ngrok] (apiClient: NgrokApiClient)(implicit ec: Executi
     id: String,
     description: Option[String] = None,
     metadata: Option[String] = None,
-    hostports: Option[List[String]] = None,
+    hostports: List[String] = List.empty,
     mutualTls: Option[EndpointMutualTlsMutate] = None,
     tlsTermination: Option[EndpointTlsTerminationAtEdge] = None
   ): Future[HttpsEdge] =

@@ -54,7 +54,7 @@ object ReservedDomains {
 /** Reserved Domains are hostnames that you can listen for traffic on. Domains
   *  can be used to listen for http, https or tls traffic. You may use a domain
   *  that you own by creating a CNAME record specified in the returned resource.
-  *  This CNAME record points traffic for that domain to ngrok's edge servers.
+  *  This CNAME record points traffic for that domain to ngrok&#39;s edge servers.
   *
   * See also <a href="https://ngrok.com/docs/api#api-reserved-domains">https://ngrok.com/docs/api#api-reserved-domains</a>.
   */
@@ -65,7 +65,7 @@ class ReservedDomains private[ngrok] (apiClient: NgrokApiClient)(implicit ec: Ex
     *
     * See also <a href="https://ngrok.com/docs/api#api-reserved-domains-create">https://ngrok.com/docs/api#api-reserved-domains-create</a>.
     *
-    * @param name the domain name to reserve. It may be a full domain name like app.example.com. If the name does not contain a '.' it will reserve that subdomain on ngrok.io.
+    * @param name the domain name to reserve. It may be a full domain name like app.example.com. If the name does not contain a &#39;.&#39; it will reserve that subdomain on ngrok.io.
     * @param region reserve the domain in this geographic ngrok datacenter. Optional, default is us. (au, eu, ap, us, jp, in, sa)
     * @param description human-readable description of what this reserved domain will be used for
     * @param metadata arbitrary user-defined machine-readable data of this reserved domain. Optional, max 4096 bytes.

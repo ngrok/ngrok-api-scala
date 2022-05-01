@@ -27,11 +27,11 @@ object IpPolicyRuleList {
 
   implicit val decodeIpPolicyRuleList: io.circe.Decoder[IpPolicyRuleList] = (c: io.circe.HCursor) =>
     for {
-      ipPolicyRules <- c.downField("ip_policy_rules").as[List[IpPolicyRule]]
+      ipPolicyRules <- c.downField("ip_policy_rules").as[Option[List[IpPolicyRule]]]
       uri           <- c.downField("uri").as[java.net.URI]
       nextPageUri   <- c.downField("next_page_uri").as[Option[java.net.URI]]
     } yield IpPolicyRuleList(
-      ipPolicyRules,
+      ipPolicyRules.getOrElse(List.empty),
       uri,
       nextPageUri
     )

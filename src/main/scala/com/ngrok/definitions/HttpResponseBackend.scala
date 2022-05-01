@@ -16,7 +16,7 @@ import io.circe.syntax._
   */
 final case class HttpResponseBackend(
   id: String,
-  uri: String,
+  uri: java.net.URI,
   createdAt: java.time.OffsetDateTime,
   description: String,
   metadata: String,
@@ -43,12 +43,12 @@ object HttpResponseBackend {
   implicit val decodeHttpResponseBackend: io.circe.Decoder[HttpResponseBackend] = (c: io.circe.HCursor) =>
     for {
       id          <- c.downField("id").as[String]
-      uri         <- c.downField("uri").as[String]
+      uri         <- c.downField("uri").as[java.net.URI]
       createdAt   <- c.downField("created_at").as[java.time.OffsetDateTime]
       description <- c.downField("description").as[String]
       metadata    <- c.downField("metadata").as[String]
       body        <- c.downField("body").as[String]
-      headers     <- c.downField("headers").as[Map[String, String]]
+      headers     <- c.downField("headers").as[Option[Map[String, String]]]
       statusCode  <- c.downField("status_code").as[Int]
     } yield HttpResponseBackend(
       id,
@@ -57,7 +57,7 @@ object HttpResponseBackend {
       description,
       metadata,
       body,
-      headers,
+      headers.getOrElse(Map.empty),
       statusCode
     )
 }

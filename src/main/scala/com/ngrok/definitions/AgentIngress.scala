@@ -22,7 +22,7 @@ final case class AgentIngress(
   domain: String,
   nsTargets: List[String],
   regionDomains: List[String],
-  createdAt: String
+  createdAt: java.time.OffsetDateTime
 )
 
 object AgentIngress {
@@ -46,17 +46,17 @@ object AgentIngress {
       description   <- c.downField("description").as[String]
       metadata      <- c.downField("metadata").as[String]
       domain        <- c.downField("domain").as[String]
-      nsTargets     <- c.downField("ns_targets").as[List[String]]
-      regionDomains <- c.downField("region_domains").as[List[String]]
-      createdAt     <- c.downField("created_at").as[String]
+      nsTargets     <- c.downField("ns_targets").as[Option[List[String]]]
+      regionDomains <- c.downField("region_domains").as[Option[List[String]]]
+      createdAt     <- c.downField("created_at").as[java.time.OffsetDateTime]
     } yield AgentIngress(
       id,
       uri,
       description,
       metadata,
       domain,
-      nsTargets,
-      regionDomains,
+      nsTargets.getOrElse(List.empty),
+      regionDomains.getOrElse(List.empty),
       createdAt
     )
 }

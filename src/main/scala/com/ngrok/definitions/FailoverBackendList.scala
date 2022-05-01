@@ -27,11 +27,11 @@ object FailoverBackendList {
 
   implicit val decodeFailoverBackendList: io.circe.Decoder[FailoverBackendList] = (c: io.circe.HCursor) =>
     for {
-      backends    <- c.downField("backends").as[List[FailoverBackend]]
+      backends    <- c.downField("backends").as[Option[List[FailoverBackend]]]
       uri         <- c.downField("uri").as[java.net.URI]
       nextPageUri <- c.downField("next_page_uri").as[Option[java.net.URI]]
     } yield FailoverBackendList(
-      backends,
+      backends.getOrElse(List.empty),
       uri,
       nextPageUri
     )

@@ -27,11 +27,11 @@ object ReservedDomainList {
 
   implicit val decodeReservedDomainList: io.circe.Decoder[ReservedDomainList] = (c: io.circe.HCursor) =>
     for {
-      reservedDomains <- c.downField("reserved_domains").as[List[ReservedDomain]]
+      reservedDomains <- c.downField("reserved_domains").as[Option[List[ReservedDomain]]]
       uri             <- c.downField("uri").as[java.net.URI]
       nextPageUri     <- c.downField("next_page_uri").as[Option[java.net.URI]]
     } yield ReservedDomainList(
-      reservedDomains,
+      reservedDomains.getOrElse(List.empty),
       uri,
       nextPageUri
     )

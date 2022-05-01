@@ -27,11 +27,11 @@ object ReservedAddrList {
 
   implicit val decodeReservedAddrList: io.circe.Decoder[ReservedAddrList] = (c: io.circe.HCursor) =>
     for {
-      reservedAddrs <- c.downField("reserved_addrs").as[List[ReservedAddr]]
+      reservedAddrs <- c.downField("reserved_addrs").as[Option[List[ReservedAddr]]]
       uri           <- c.downField("uri").as[java.net.URI]
       nextPageUri   <- c.downField("next_page_uri").as[Option[java.net.URI]]
     } yield ReservedAddrList(
-      reservedAddrs,
+      reservedAddrs.getOrElse(List.empty),
       uri,
       nextPageUri
     )

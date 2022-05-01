@@ -27,11 +27,11 @@ object IpRestrictionList {
 
   implicit val decodeIpRestrictionList: io.circe.Decoder[IpRestrictionList] = (c: io.circe.HCursor) =>
     for {
-      ipRestrictions <- c.downField("ip_restrictions").as[List[IpRestriction]]
+      ipRestrictions <- c.downField("ip_restrictions").as[Option[List[IpRestriction]]]
       uri            <- c.downField("uri").as[java.net.URI]
       nextPageUri    <- c.downField("next_page_uri").as[Option[java.net.URI]]
     } yield IpRestrictionList(
-      ipRestrictions,
+      ipRestrictions.getOrElse(List.empty),
       uri,
       nextPageUri
     )

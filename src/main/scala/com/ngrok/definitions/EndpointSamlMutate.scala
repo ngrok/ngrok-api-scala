@@ -7,7 +7,7 @@ import io.circe.syntax._
   * @constructor create a new EndpointSamlMutate.
   * @param enabled <code>true</code> if the module will be applied to traffic, <code>false</code> to disable. default <code>true</code> if unspecified
   * @param optionsPassthrough Do not enforce authentication on HTTP OPTIONS requests. necessary if you are supporting CORS.
-  * @param cookiePrefix the prefix of the session cookie that ngrok sets on the http client to cache authentication. default is 'ngrok.'
+  * @param cookiePrefix the prefix of the session cookie that ngrok sets on the http client to cache authentication. default is &#39;ngrok.&#39;
   * @param inactivityTimeout Integer number of seconds of inactivity after which if the user has not accessed the endpoint, their session will time out and they will be forced to reauthenticate.
   * @param maximumDuration Integer number of seconds of the maximum duration of an authenticated session. After this period is exceeded, a user must reauthenticate.
   * @param idpMetadata The full XML IdP EntityDescriptor. Your IdP may provide this to you as a a file to download or as a URL.
@@ -56,7 +56,7 @@ object EndpointSamlMutate {
       idpMetadata        <- c.downField("idp_metadata").as[String]
       forceAuthn         <- c.downField("force_authn").as[Boolean]
       allowIdpInitiated  <- c.downField("allow_idp_initiated").as[Option[Boolean]]
-      authorizedGroups   <- c.downField("authorized_groups").as[List[String]]
+      authorizedGroups   <- c.downField("authorized_groups").as[Option[List[String]]]
       nameidFormat       <- c.downField("nameid_format").as[String]
     } yield EndpointSamlMutate(
       enabled,
@@ -67,7 +67,7 @@ object EndpointSamlMutate {
       idpMetadata,
       forceAuthn,
       allowIdpInitiated,
-      authorizedGroups,
+      authorizedGroups.getOrElse(List.empty),
       nameidFormat
     )
 }

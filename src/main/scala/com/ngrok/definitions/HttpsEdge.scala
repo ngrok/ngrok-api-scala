@@ -19,8 +19,8 @@ final case class HttpsEdge(
   id: String,
   description: String,
   metadata: String,
-  createdAt: String,
-  uri: String,
+  createdAt: java.time.OffsetDateTime,
+  uri: java.net.URI,
   hostports: Option[List[String]] = None,
   mutualTls: Option[EndpointMutualTls] = None,
   tlsTermination: Option[EndpointTlsTermination] = None,
@@ -35,7 +35,7 @@ object HttpsEdge {
       Option(("metadata", value.metadata.asJson)),
       Option(("created_at", value.createdAt.asJson)),
       Option(("uri", value.uri.asJson)),
-      value.hostports.map(_.asJson).map(("hostports", _)),
+      if (value.hostports.isEmpty) None else Option(("hostports", value.hostports.asJson)),
       value.mutualTls.map(_.asJson).map(("mutual_tls", _)),
       value.tlsTermination.map(_.asJson).map(("tls_termination", _)),
       Option(("routes", value.routes.asJson))
@@ -47,12 +47,12 @@ object HttpsEdge {
       id             <- c.downField("id").as[String]
       description    <- c.downField("description").as[String]
       metadata       <- c.downField("metadata").as[String]
-      createdAt      <- c.downField("created_at").as[String]
-      uri            <- c.downField("uri").as[String]
+      createdAt      <- c.downField("created_at").as[java.time.OffsetDateTime]
+      uri            <- c.downField("uri").as[java.net.URI]
       hostports      <- c.downField("hostports").as[Option[List[String]]]
       mutualTls      <- c.downField("mutual_tls").as[Option[EndpointMutualTls]]
       tlsTermination <- c.downField("tls_termination").as[Option[EndpointTlsTermination]]
-      routes         <- c.downField("routes").as[List[HttpsEdgeRoute]]
+      routes         <- c.downField("routes").as[Option[List[HttpsEdgeRoute]]]
     } yield HttpsEdge(
       id,
       description,
@@ -62,6 +62,6 @@ object HttpsEdge {
       hostports,
       mutualTls,
       tlsTermination,
-      routes
+      routes.getOrElse(List.empty)
     )
 }

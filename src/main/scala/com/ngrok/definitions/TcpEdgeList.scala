@@ -26,11 +26,11 @@ object TcpEdgeList {
 
   implicit val decodeTcpEdgeList: io.circe.Decoder[TcpEdgeList] = (c: io.circe.HCursor) =>
     for {
-      tcpEdges    <- c.downField("tcp_edges").as[List[TcpEdge]]
+      tcpEdges    <- c.downField("tcp_edges").as[Option[List[TcpEdge]]]
       uri         <- c.downField("uri").as[java.net.URI]
       nextPageUri <- c.downField("next_page_uri").as[Option[java.net.URI]]
     } yield TcpEdgeList(
-      tcpEdges,
+      tcpEdges.getOrElse(List.empty),
       uri,
       nextPageUri
     )

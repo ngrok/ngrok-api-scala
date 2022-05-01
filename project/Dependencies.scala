@@ -2,12 +2,12 @@ import sbt._
 
 object Dependencies {
   lazy val versions = Map(
-    "armeria" -> "1.11.0",
+    "armeria" -> "1.15.0",
     "circe" -> "0.14.1",
-    "scala-java8" -> "1.0.1",
-    "scalatest" -> "3.2.10",
-    "slf4j" -> "1.7.32",
-    "wiremock" -> "2.31.0"
+    "scala-java8" -> "1.0.2",
+    "scalatest" -> "3.2.11",
+    "slf4j" -> "1.7.36",
+    "wiremock" -> "2.32.0"
   )
 
   lazy val scalaJava8 = "org.scala-lang.modules" %% "scala-java8-compat" % versions("scala-java8")

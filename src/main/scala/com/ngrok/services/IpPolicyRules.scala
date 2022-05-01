@@ -12,7 +12,7 @@ object IpPolicyRules {
     metadata: Option[String],
     cidr: String,
     ipPolicyId: String,
-    action: Option[String]
+    action: String
   )
 
   private object IpPolicyRulesCreate {
@@ -22,7 +22,7 @@ object IpPolicyRules {
         value.metadata.map(_.asJson).map(("metadata", _)),
         Option(("cidr", value.cidr.asJson)),
         Option(("ip_policy_id", value.ipPolicyId.asJson)),
-        value.action.map(_.asJson).map(("action", _))
+        Option(("action", value.action.asJson))
       ).flatten.toMap.asJsonObject
     )
   }
@@ -59,17 +59,17 @@ class IpPolicyRules private[ngrok] (apiClient: NgrokApiClient)(implicit ec: Exec
     *
     * @param cidr an IP or IP range specified in CIDR notation. IPv4 and IPv6 are both supported.
     * @param ipPolicyId ID of the IP policy this IP policy rule will be attached to
+    * @param action the action to apply to the policy rule, either <code>allow</code> or <code>deny</code>
     * @param description human-readable description of the source IPs of this IP rule. optional, max 255 bytes.
     * @param metadata arbitrary user-defined machine-readable data of this IP policy rule. optional, max 4096 bytes.
-    * @param action the action to apply to the policy rule, either <code>allow</code> or <code>deny</code>
     * @return a [[scala.concurrent.Future]] encapsulating the API call's result
     */
   def create(
     cidr: String,
     ipPolicyId: String,
+    action: String,
     description: Option[String] = None,
-    metadata: Option[String] = None,
-    action: Option[String] = None
+    metadata: Option[String] = None
   ): Future[IpPolicyRule] =
     apiClient.sendRequest[IpPolicyRule](
       NgrokApiClient.HttpMethod.Post,
