@@ -10,7 +10,7 @@ object EdgesTls {
   private case class EdgesTlsCreate(
     description: Option[String],
     metadata: Option[String],
-    hostports: Option[List[String]],
+    hostports: List[String],
     backend: Option[EndpointBackendMutate],
     ipRestriction: Option[EndpointIpPolicyMutate],
     mutualTls: Option[EndpointMutualTlsMutate],
@@ -22,7 +22,7 @@ object EdgesTls {
       List(
         value.description.map(_.asJson).map(("description", _)),
         value.metadata.map(_.asJson).map(("metadata", _)),
-        value.hostports.map(_.asJson).map(("hostports", _)),
+        if (value.hostports.isEmpty) None else Option(("hostports", value.hostports.asJson)),
         value.backend.map(_.asJson).map(("backend", _)),
         value.ipRestriction.map(_.asJson).map(("ip_restriction", _)),
         value.mutualTls.map(_.asJson).map(("mutual_tls", _)),
@@ -34,7 +34,7 @@ object EdgesTls {
   private case class EdgesTlsUpdate(
     description: Option[String],
     metadata: Option[String],
-    hostports: Option[List[String]],
+    hostports: List[String],
     backend: Option[EndpointBackendMutate],
     ipRestriction: Option[EndpointIpPolicyMutate],
     mutualTls: Option[EndpointMutualTlsMutate],
@@ -46,7 +46,7 @@ object EdgesTls {
       List(
         value.description.map(_.asJson).map(("description", _)),
         value.metadata.map(_.asJson).map(("metadata", _)),
-        value.hostports.map(_.asJson).map(("hostports", _)),
+        if (value.hostports.isEmpty) None else Option(("hostports", value.hostports.asJson)),
         value.backend.map(_.asJson).map(("backend", _)),
         value.ipRestriction.map(_.asJson).map(("ip_restriction", _)),
         value.mutualTls.map(_.asJson).map(("mutual_tls", _)),
@@ -80,7 +80,7 @@ class EdgesTls private[ngrok] (apiClient: NgrokApiClient)(implicit ec: Execution
   def create(
     description: Option[String] = None,
     metadata: Option[String] = None,
-    hostports: Option[List[String]] = None,
+    hostports: List[String] = List.empty,
     backend: Option[EndpointBackendMutate] = None,
     ipRestriction: Option[EndpointIpPolicyMutate] = None,
     mutualTls: Option[EndpointMutualTlsMutate] = None,
@@ -165,7 +165,7 @@ class EdgesTls private[ngrok] (apiClient: NgrokApiClient)(implicit ec: Execution
     id: String,
     description: Option[String] = None,
     metadata: Option[String] = None,
-    hostports: Option[List[String]] = None,
+    hostports: List[String] = List.empty,
     backend: Option[EndpointBackendMutate] = None,
     ipRestriction: Option[EndpointIpPolicyMutate] = None,
     mutualTls: Option[EndpointMutualTlsMutate] = None,

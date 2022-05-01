@@ -10,7 +10,7 @@ object WeightedBackends {
   private case class WeightedBackendsCreate(
     description: Option[String],
     metadata: Option[String],
-    backends: Option[Map[String, Long]]
+    backends: Map[String, Long]
   )
 
   private object WeightedBackendsCreate {
@@ -19,7 +19,7 @@ object WeightedBackends {
         List(
           value.description.map(_.asJson).map(("description", _)),
           value.metadata.map(_.asJson).map(("metadata", _)),
-          value.backends.map(_.asJson).map(("backends", _))
+          if (value.backends.isEmpty) None else Option(("backends", value.backends.asJson))
         ).flatten.toMap.asJsonObject
       )
   }
@@ -27,7 +27,7 @@ object WeightedBackends {
   private case class WeightedBackendsUpdate(
     description: Option[String],
     metadata: Option[String],
-    backends: Option[Map[String, Long]]
+    backends: Map[String, Long]
   )
 
   private object WeightedBackendsUpdate {
@@ -36,7 +36,7 @@ object WeightedBackends {
         List(
           value.description.map(_.asJson).map(("description", _)),
           value.metadata.map(_.asJson).map(("metadata", _)),
-          value.backends.map(_.asJson).map(("backends", _))
+          if (value.backends.isEmpty) None else Option(("backends", value.backends.asJson))
         ).flatten.toMap.asJsonObject
       )
   }
@@ -45,7 +45,7 @@ object WeightedBackends {
 
 /** A Weighted Backend balances traffic among the referenced backends. Traffic
   *  is assigned proportionally to each based on its weight. The percentage of
-  *  traffic is calculated by dividing a backend's weight by the sum of all
+  *  traffic is calculated by dividing a backend&#39;s weight by the sum of all
   *  weights.
   *
   * See also <a href="https://ngrok.com/docs/api#api-weighted-backends">https://ngrok.com/docs/api#api-weighted-backends</a>.
@@ -65,7 +65,7 @@ class WeightedBackends private[ngrok] (apiClient: NgrokApiClient)(implicit ec: E
   def create(
     description: Option[String] = None,
     metadata: Option[String] = None,
-    backends: Option[Map[String, Long]] = None
+    backends: Map[String, Long] = Map.empty
   ): Future[WeightedBackend] =
     apiClient.sendRequest[WeightedBackend](
       NgrokApiClient.HttpMethod.Post,
@@ -152,7 +152,7 @@ class WeightedBackends private[ngrok] (apiClient: NgrokApiClient)(implicit ec: E
     id: String,
     description: Option[String] = None,
     metadata: Option[String] = None,
-    backends: Option[Map[String, Long]] = None
+    backends: Map[String, Long] = Map.empty
   ): Future[WeightedBackend] =
     apiClient.sendRequest[WeightedBackend](
       NgrokApiClient.HttpMethod.Patch,

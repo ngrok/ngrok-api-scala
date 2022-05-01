@@ -40,7 +40,8 @@ object ApiKeys {
 /** API Keys are used to authenticate to the <a
   * href="https://ngrok.com/docs/api#authentication">ngrok
   *  API</a>. You may use the API itself
-  *  to provision and manage API Keys but you'll need to provision your first API
+  *  to provision and manage API Keys but you&#39;ll need to provision your first
+  * API
   *  key from the <a href="https://dashboard.ngrok.com/api/keys">API Keys page</a>
   * on your
   *  ngrok.com dashboard.

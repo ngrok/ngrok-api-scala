@@ -25,9 +25,9 @@ object EndpointIpPolicyMutate {
   implicit val decodeEndpointIpPolicyMutate: io.circe.Decoder[EndpointIpPolicyMutate] = (c: io.circe.HCursor) =>
     for {
       enabled     <- c.downField("enabled").as[Option[Boolean]]
-      ipPolicyIds <- c.downField("ip_policy_ids").as[List[String]]
+      ipPolicyIds <- c.downField("ip_policy_ids").as[Option[List[String]]]
     } yield EndpointIpPolicyMutate(
       enabled,
-      ipPolicyIds
+      ipPolicyIds.getOrElse(List.empty)
     )
 }

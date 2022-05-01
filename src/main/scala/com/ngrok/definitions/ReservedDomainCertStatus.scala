@@ -6,7 +6,7 @@ import io.circe.syntax._
   *
   * @constructor create a new ReservedDomainCertStatus.
   * @param renewsAt timestamp when the next renewal will be requested, RFC 3339 format
-  * @param provisioningJob status of the certificate provisioning job, or null if the certificiate isn't being provisioned or renewed
+  * @param provisioningJob status of the certificate provisioning job, or null if the certificiate isn&#39;t being provisioned or renewed
   */
 final case class ReservedDomainCertStatus(
   renewsAt: Option[java.time.OffsetDateTime] = None,

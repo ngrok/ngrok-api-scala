@@ -33,7 +33,7 @@ object TcpEdge {
       Option(("metadata", value.metadata.asJson)),
       Option(("created_at", value.createdAt.asJson)),
       Option(("uri", value.uri.asJson)),
-      value.hostports.map(_.asJson).map(("hostports", _)),
+      if (value.hostports.isEmpty) None else Option(("hostports", value.hostports.asJson)),
       value.backend.map(_.asJson).map(("backend", _)),
       value.ipRestriction.map(_.asJson).map(("ip_restriction", _))
     ).flatten.toMap.asJsonObject

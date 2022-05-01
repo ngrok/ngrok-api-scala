@@ -28,11 +28,13 @@ object SshCertificateAuthorityList {
   implicit val decodeSshCertificateAuthorityList: io.circe.Decoder[SshCertificateAuthorityList] =
     (c: io.circe.HCursor) =>
       for {
-        sshCertificateAuthorities <- c.downField("ssh_certificate_authorities").as[List[SshCertificateAuthority]]
-        uri                       <- c.downField("uri").as[java.net.URI]
-        nextPageUri               <- c.downField("next_page_uri").as[Option[java.net.URI]]
+        sshCertificateAuthorities <- c
+          .downField("ssh_certificate_authorities")
+          .as[Option[List[SshCertificateAuthority]]]
+        uri         <- c.downField("uri").as[java.net.URI]
+        nextPageUri <- c.downField("next_page_uri").as[Option[java.net.URI]]
       } yield SshCertificateAuthorityList(
-        sshCertificateAuthorities,
+        sshCertificateAuthorities.getOrElse(List.empty),
         uri,
         nextPageUri
       )

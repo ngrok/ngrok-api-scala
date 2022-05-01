@@ -10,7 +10,7 @@ object SshHostCertificates {
   private case class SshHostCertificatesCreate(
     sshCertificateAuthorityId: String,
     publicKey: String,
-    principals: Option[List[String]],
+    principals: List[String],
     validAfter: Option[java.time.OffsetDateTime],
     validUntil: Option[java.time.OffsetDateTime],
     description: Option[String],
@@ -23,7 +23,7 @@ object SshHostCertificates {
         List(
           Option(("ssh_certificate_authority_id", value.sshCertificateAuthorityId.asJson)),
           Option(("public_key", value.publicKey.asJson)),
-          value.principals.map(_.asJson).map(("principals", _)),
+          if (value.principals.isEmpty) None else Option(("principals", value.principals.asJson)),
           value.validAfter.map(_.asJson).map(("valid_after", _)),
           value.validUntil.map(_.asJson).map(("valid_until", _)),
           value.description.map(_.asJson).map(("description", _)),
@@ -74,7 +74,7 @@ class SshHostCertificates private[ngrok] (apiClient: NgrokApiClient)(implicit ec
   def create(
     sshCertificateAuthorityId: String,
     publicKey: String,
-    principals: Option[List[String]] = None,
+    principals: List[String] = List.empty,
     validAfter: Option[java.time.OffsetDateTime] = None,
     validUntil: Option[java.time.OffsetDateTime] = None,
     description: Option[String] = None,

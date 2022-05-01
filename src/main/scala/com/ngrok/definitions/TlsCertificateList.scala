@@ -27,11 +27,11 @@ object TlsCertificateList {
 
   implicit val decodeTlsCertificateList: io.circe.Decoder[TlsCertificateList] = (c: io.circe.HCursor) =>
     for {
-      tlsCertificates <- c.downField("tls_certificates").as[List[TlsCertificate]]
+      tlsCertificates <- c.downField("tls_certificates").as[Option[List[TlsCertificate]]]
       uri             <- c.downField("uri").as[java.net.URI]
       nextPageUri     <- c.downField("next_page_uri").as[Option[java.net.URI]]
     } yield TlsCertificateList(
-      tlsCertificates,
+      tlsCertificates.getOrElse(List.empty),
       uri,
       nextPageUri
     )

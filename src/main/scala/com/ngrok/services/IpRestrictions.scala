@@ -31,7 +31,7 @@ object IpRestrictions {
     description: Option[String],
     metadata: Option[String],
     enforced: Option[Boolean],
-    ipPolicyIds: Option[List[String]]
+    ipPolicyIds: List[String]
   )
 
   private object IpRestrictionsUpdate {
@@ -40,7 +40,7 @@ object IpRestrictions {
         value.description.map(_.asJson).map(("description", _)),
         value.metadata.map(_.asJson).map(("metadata", _)),
         value.enforced.map(_.asJson).map(("enforced", _)),
-        value.ipPolicyIds.map(_.asJson).map(("ip_policy_ids", _))
+        if (value.ipPolicyIds.isEmpty) None else Option(("ip_policy_ids", value.ipPolicyIds.asJson))
       ).flatten.toMap.asJsonObject
     )
   }
@@ -166,7 +166,7 @@ class IpRestrictions private[ngrok] (apiClient: NgrokApiClient)(implicit ec: Exe
     description: Option[String] = None,
     metadata: Option[String] = None,
     enforced: Option[Boolean] = None,
-    ipPolicyIds: Option[List[String]] = None
+    ipPolicyIds: List[String] = List.empty
   ): Future[IpRestriction] =
     apiClient.sendRequest[IpRestriction](
       NgrokApiClient.HttpMethod.Patch,

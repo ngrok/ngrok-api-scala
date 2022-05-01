@@ -67,10 +67,7 @@ class ApiKeysTest extends AnyFreeSpec with Matchers with ScalaFutures with Optio
       wireMock.stubFor(
         post(urlPathEqualTo("/api_keys"))
           .withHeader(HttpHeaderNames.AUTHORIZATION.toString(), equalTo(s"Bearer $FakeApiSecret"))
-          .withHeader(
-            HttpHeaderNames.USER_AGENT.toString(),
-            equalTo(s"ngrok-api-client-scala/${Version.ClientVersion}")
-          )
+          .withHeader(HttpHeaderNames.USER_AGENT.toString(), equalTo(UserAgent))
           .withHeader("ngrok-version", equalTo(Version.ApiVersion))
           .withHeader(HttpHeaderNames.CONTENT_TYPE.toString(), containing("application/json"))
           .withRequestBody(equalToJson(apiKeyCreate.asJson.noSpaces))
@@ -83,10 +80,7 @@ class ApiKeysTest extends AnyFreeSpec with Matchers with ScalaFutures with Optio
       wireMock.stubFor(
         get(urlPathEqualTo(s"/api_keys/${apiKey.id}"))
           .withHeader(HttpHeaderNames.AUTHORIZATION.toString(), equalTo(s"Bearer $FakeApiSecret"))
-          .withHeader(
-            HttpHeaderNames.USER_AGENT.toString(),
-            equalTo(s"ngrok-api-client-scala/${Version.ClientVersion}")
-          )
+          .withHeader(HttpHeaderNames.USER_AGENT.toString(), equalTo(UserAgent))
           .withHeader("ngrok-version", equalTo(Version.ApiVersion))
           .willReturn(
             ok(apiKeyNoToken.asJson.noSpaces)
@@ -98,10 +92,7 @@ class ApiKeysTest extends AnyFreeSpec with Matchers with ScalaFutures with Optio
         get(urlPathEqualTo("/api_keys"))
           .withQueryParam("limit", equalTo("10"))
           .withHeader(HttpHeaderNames.AUTHORIZATION.toString(), equalTo(s"Bearer $FakeApiSecret"))
-          .withHeader(
-            HttpHeaderNames.USER_AGENT.toString(),
-            equalTo(s"ngrok-api-client-scala/${Version.ClientVersion}")
-          )
+          .withHeader(HttpHeaderNames.USER_AGENT.toString(), equalTo(UserAgent))
           .withHeader("ngrok-version", equalTo(Version.ApiVersion))
           .willReturn(
             ok(apiKeyList.asJson.noSpaces)
@@ -112,10 +103,7 @@ class ApiKeysTest extends AnyFreeSpec with Matchers with ScalaFutures with Optio
       wireMock.stubFor(
         patch(urlPathEqualTo(s"/api_keys/${apiKey.id}"))
           .withHeader(HttpHeaderNames.AUTHORIZATION.toString(), equalTo(s"Bearer $FakeApiSecret"))
-          .withHeader(
-            HttpHeaderNames.USER_AGENT.toString(),
-            equalTo(s"ngrok-api-client-scala/${Version.ClientVersion}")
-          )
+          .withHeader(HttpHeaderNames.USER_AGENT.toString(), equalTo(UserAgent))
           .withHeader("ngrok-version", equalTo(Version.ApiVersion))
           .withHeader(HttpHeaderNames.CONTENT_TYPE.toString(), containing("application/json"))
           .withRequestBody(equalToJson(apiKeyUpdate.asJson.noSpaces))
@@ -128,10 +116,7 @@ class ApiKeysTest extends AnyFreeSpec with Matchers with ScalaFutures with Optio
       wireMock.stubFor(
         delete(urlPathEqualTo(s"/api_keys/${apiKey.id}"))
           .withHeader(HttpHeaderNames.AUTHORIZATION.toString(), equalTo(s"Bearer $FakeApiSecret"))
-          .withHeader(
-            HttpHeaderNames.USER_AGENT.toString(),
-            equalTo(s"ngrok-api-client-scala/${Version.ClientVersion}")
-          )
+          .withHeader(HttpHeaderNames.USER_AGENT.toString(), equalTo(UserAgent))
           .withHeader("ngrok-version", equalTo(Version.ApiVersion))
           .willReturn(noContent())
       )

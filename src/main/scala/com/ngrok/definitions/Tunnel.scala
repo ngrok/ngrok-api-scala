@@ -6,7 +6,7 @@ import io.circe.syntax._
   *
   * @constructor create a new Tunnel.
   * @param id unique tunnel resource identifier
-  * @param publicUrl URL of the ephemeral tunnel's public endpoint
+  * @param publicUrl URL of the ephemeral tunnel&#39;s public endpoint
   * @param startedAt timestamp when the tunnel was initiated in RFC 3339 format
   * @param metadata user-supplied metadata for the tunnel defined in the ngrok configuration file. See the tunnel <a href="https://ngrok.com/docs#tunnel-definitions-metadata">metadata configuration option</a> In API version 0, this value was instead pulled from the top-level <a href="https://ngrok.com/docs#config_metadata">metadata configuration option</a>.
   * @param proto tunnel protocol for ephemeral tunnels. one of <code>http</code>, <code>https</code>, <code>tcp</code> or <code>tls</code>
@@ -43,7 +43,7 @@ object Tunnel {
       Option(("tunnel_session", value.tunnelSession.asJson)),
       value.endpoint.map(_.asJson).map(("endpoint", _)),
       Option(("labels", value.labels.asJson)),
-      value.backends.map(_.asJson).map(("backends", _)),
+      if (value.backends.isEmpty) None else Option(("backends", value.backends.asJson)),
       Option(("forwards_to", value.forwardsTo.asJson))
     ).flatten.toMap.asJsonObject
   )
@@ -58,7 +58,7 @@ object Tunnel {
       region        <- c.downField("region").as[String]
       tunnelSession <- c.downField("tunnel_session").as[Ref]
       endpoint      <- c.downField("endpoint").as[Option[Ref]]
-      labels        <- c.downField("labels").as[Map[String, String]]
+      labels        <- c.downField("labels").as[Option[Map[String, String]]]
       backends      <- c.downField("backends").as[Option[List[Ref]]]
       forwardsTo    <- c.downField("forwards_to").as[String]
     } yield Tunnel(
@@ -70,7 +70,7 @@ object Tunnel {
       region,
       tunnelSession,
       endpoint,
-      labels,
+      labels.getOrElse(Map.empty),
       backends,
       forwardsTo
     )

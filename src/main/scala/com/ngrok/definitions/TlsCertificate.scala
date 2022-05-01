@@ -92,8 +92,8 @@ object TlsCertificate {
       issuedAt                  <- c.downField("issued_at").as[Option[java.time.OffsetDateTime]]
       notBefore                 <- c.downField("not_before").as[java.time.OffsetDateTime]
       notAfter                  <- c.downField("not_after").as[java.time.OffsetDateTime]
-      keyUsages                 <- c.downField("key_usages").as[List[String]]
-      extendedKeyUsages         <- c.downField("extended_key_usages").as[List[String]]
+      keyUsages                 <- c.downField("key_usages").as[Option[List[String]]]
+      extendedKeyUsages         <- c.downField("extended_key_usages").as[Option[List[String]]]
       privateKeyType            <- c.downField("private_key_type").as[String]
       issuerCommonName          <- c.downField("issuer_common_name").as[String]
       serialNumber              <- c.downField("serial_number").as[String]
@@ -114,8 +114,8 @@ object TlsCertificate {
       issuedAt,
       notBefore,
       notAfter,
-      keyUsages,
-      extendedKeyUsages,
+      keyUsages.getOrElse(List.empty),
+      extendedKeyUsages.getOrElse(List.empty),
       privateKeyType,
       issuerCommonName,
       serialNumber,

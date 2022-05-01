@@ -27,11 +27,11 @@ object TunnelSessionList {
 
   implicit val decodeTunnelSessionList: io.circe.Decoder[TunnelSessionList] = (c: io.circe.HCursor) =>
     for {
-      tunnelSessions <- c.downField("tunnel_sessions").as[List[TunnelSession]]
+      tunnelSessions <- c.downField("tunnel_sessions").as[Option[List[TunnelSession]]]
       uri            <- c.downField("uri").as[java.net.URI]
       nextPageUri    <- c.downField("next_page_uri").as[Option[java.net.URI]]
     } yield TunnelSessionList(
-      tunnelSessions,
+      tunnelSessions.getOrElse(List.empty),
       uri,
       nextPageUri
     )

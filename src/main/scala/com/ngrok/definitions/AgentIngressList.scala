@@ -27,11 +27,11 @@ object AgentIngressList {
 
   implicit val decodeAgentIngressList: io.circe.Decoder[AgentIngressList] = (c: io.circe.HCursor) =>
     for {
-      ingresses   <- c.downField("ingresses").as[List[AgentIngress]]
+      ingresses   <- c.downField("ingresses").as[Option[List[AgentIngress]]]
       uri         <- c.downField("uri").as[java.net.URI]
       nextPageUri <- c.downField("next_page_uri").as[Option[java.net.URI]]
     } yield AgentIngressList(
-      ingresses,
+      ingresses.getOrElse(List.empty),
       uri,
       nextPageUri
     )

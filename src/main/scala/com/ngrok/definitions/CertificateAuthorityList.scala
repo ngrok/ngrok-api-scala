@@ -27,11 +27,11 @@ object CertificateAuthorityList {
 
   implicit val decodeCertificateAuthorityList: io.circe.Decoder[CertificateAuthorityList] = (c: io.circe.HCursor) =>
     for {
-      certificateAuthorities <- c.downField("certificate_authorities").as[List[CertificateAuthority]]
+      certificateAuthorities <- c.downField("certificate_authorities").as[Option[List[CertificateAuthority]]]
       uri                    <- c.downField("uri").as[java.net.URI]
       nextPageUri            <- c.downField("next_page_uri").as[Option[java.net.URI]]
     } yield CertificateAuthorityList(
-      certificateAuthorities,
+      certificateAuthorities.getOrElse(List.empty),
       uri,
       nextPageUri
     )

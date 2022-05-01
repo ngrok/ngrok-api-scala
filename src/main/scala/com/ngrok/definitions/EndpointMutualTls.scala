@@ -25,9 +25,9 @@ object EndpointMutualTls {
   implicit val decodeEndpointMutualTls: io.circe.Decoder[EndpointMutualTls] = (c: io.circe.HCursor) =>
     for {
       enabled                <- c.downField("enabled").as[Option[Boolean]]
-      certificateAuthorities <- c.downField("certificate_authorities").as[List[Ref]]
+      certificateAuthorities <- c.downField("certificate_authorities").as[Option[List[Ref]]]
     } yield EndpointMutualTls(
       enabled,
-      certificateAuthorities
+      certificateAuthorities.getOrElse(List.empty)
     )
 }

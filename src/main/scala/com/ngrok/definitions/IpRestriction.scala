@@ -49,7 +49,7 @@ object IpRestriction {
       metadata    <- c.downField("metadata").as[String]
       enforced    <- c.downField("enforced").as[Boolean]
       `type`      <- c.downField("type").as[String]
-      ipPolicies  <- c.downField("ip_policies").as[List[Ref]]
+      ipPolicies  <- c.downField("ip_policies").as[Option[List[Ref]]]
     } yield IpRestriction(
       id,
       uri,
@@ -58,6 +58,6 @@ object IpRestriction {
       metadata,
       enforced,
       `type`,
-      ipPolicies
+      ipPolicies.getOrElse(List.empty)
     )
 }

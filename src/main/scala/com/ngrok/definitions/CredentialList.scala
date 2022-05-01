@@ -27,11 +27,11 @@ object CredentialList {
 
   implicit val decodeCredentialList: io.circe.Decoder[CredentialList] = (c: io.circe.HCursor) =>
     for {
-      credentials <- c.downField("credentials").as[List[Credential]]
+      credentials <- c.downField("credentials").as[Option[List[Credential]]]
       uri         <- c.downField("uri").as[java.net.URI]
       nextPageUri <- c.downField("next_page_uri").as[Option[java.net.URI]]
     } yield CredentialList(
-      credentials,
+      credentials.getOrElse(List.empty),
       uri,
       nextPageUri
     )

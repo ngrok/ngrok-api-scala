@@ -11,7 +11,7 @@ object HttpResponseBackends {
     description: Option[String],
     metadata: Option[String],
     body: Option[String],
-    headers: Option[Map[String, String]],
+    headers: Map[String, String],
     statusCode: Option[Int]
   )
 
@@ -22,7 +22,7 @@ object HttpResponseBackends {
           value.description.map(_.asJson).map(("description", _)),
           value.metadata.map(_.asJson).map(("metadata", _)),
           value.body.map(_.asJson).map(("body", _)),
-          value.headers.map(_.asJson).map(("headers", _)),
+          if (value.headers.isEmpty) None else Option(("headers", value.headers.asJson)),
           value.statusCode.map(_.asJson).map(("status_code", _))
         ).flatten.toMap.asJsonObject
       )
@@ -32,7 +32,7 @@ object HttpResponseBackends {
     description: Option[String],
     metadata: Option[String],
     body: Option[String],
-    headers: Option[Map[String, String]],
+    headers: Map[String, String],
     statusCode: Option[Int]
   )
 
@@ -43,7 +43,7 @@ object HttpResponseBackends {
           value.description.map(_.asJson).map(("description", _)),
           value.metadata.map(_.asJson).map(("metadata", _)),
           value.body.map(_.asJson).map(("body", _)),
-          value.headers.map(_.asJson).map(("headers", _)),
+          if (value.headers.isEmpty) None else Option(("headers", value.headers.asJson)),
           value.statusCode.map(_.asJson).map(("status_code", _))
         ).flatten.toMap.asJsonObject
       )
@@ -73,7 +73,7 @@ class HttpResponseBackends private[ngrok] (apiClient: NgrokApiClient)(implicit e
     description: Option[String] = None,
     metadata: Option[String] = None,
     body: Option[String] = None,
-    headers: Option[Map[String, String]] = None,
+    headers: Map[String, String] = Map.empty,
     statusCode: Option[Int] = None
   ): Future[HttpResponseBackend] =
     apiClient.sendRequest[HttpResponseBackend](
@@ -166,7 +166,7 @@ class HttpResponseBackends private[ngrok] (apiClient: NgrokApiClient)(implicit e
     description: Option[String] = None,
     metadata: Option[String] = None,
     body: Option[String] = None,
-    headers: Option[Map[String, String]] = None,
+    headers: Map[String, String] = Map.empty,
     statusCode: Option[Int] = None
   ): Future[HttpResponseBackend] =
     apiClient.sendRequest[HttpResponseBackend](

@@ -10,7 +10,7 @@ object TunnelGroupBackends {
   private case class TunnelGroupBackendsCreate(
     description: Option[String],
     metadata: Option[String],
-    labels: Option[Map[String, String]]
+    labels: Map[String, String]
   )
 
   private object TunnelGroupBackendsCreate {
@@ -19,7 +19,7 @@ object TunnelGroupBackends {
         List(
           value.description.map(_.asJson).map(("description", _)),
           value.metadata.map(_.asJson).map(("metadata", _)),
-          value.labels.map(_.asJson).map(("labels", _))
+          if (value.labels.isEmpty) None else Option(("labels", value.labels.asJson))
         ).flatten.toMap.asJsonObject
       )
   }
@@ -27,7 +27,7 @@ object TunnelGroupBackends {
   private case class TunnelGroupBackendsUpdate(
     description: Option[String],
     metadata: Option[String],
-    labels: Option[Map[String, String]]
+    labels: Map[String, String]
   )
 
   private object TunnelGroupBackendsUpdate {
@@ -36,7 +36,7 @@ object TunnelGroupBackends {
         List(
           value.description.map(_.asJson).map(("description", _)),
           value.metadata.map(_.asJson).map(("metadata", _)),
-          value.labels.map(_.asJson).map(("labels", _))
+          if (value.labels.isEmpty) None else Option(("labels", value.labels.asJson))
         ).flatten.toMap.asJsonObject
       )
   }
@@ -57,13 +57,13 @@ class TunnelGroupBackends private[ngrok] (apiClient: NgrokApiClient)(implicit ec
     *
     * @param description human-readable description of this backend. Optional
     * @param metadata arbitrary user-defined machine-readable data of this backend. Optional
-    * @param labels labels to watch for tunnels on, e.g. app->foo, dc->bar
+    * @param labels labels to watch for tunnels on, e.g. app-&gt;foo, dc-&gt;bar
     * @return a [[scala.concurrent.Future]] encapsulating the API call's result
     */
   def create(
     description: Option[String] = None,
     metadata: Option[String] = None,
-    labels: Option[Map[String, String]] = None
+    labels: Map[String, String] = Map.empty
   ): Future[TunnelGroupBackend] =
     apiClient.sendRequest[TunnelGroupBackend](
       NgrokApiClient.HttpMethod.Post,
@@ -143,14 +143,14 @@ class TunnelGroupBackends private[ngrok] (apiClient: NgrokApiClient)(implicit ec
     * @param id the value of the <code>id</code> parameter as a [[scala.Predef.String]]
     * @param description human-readable description of this backend. Optional
     * @param metadata arbitrary user-defined machine-readable data of this backend. Optional
-    * @param labels labels to watch for tunnels on, e.g. app->foo, dc->bar
+    * @param labels labels to watch for tunnels on, e.g. app-&gt;foo, dc-&gt;bar
     * @return a [[scala.concurrent.Future]] encapsulating the API call's result
     */
   def update(
     id: String,
     description: Option[String] = None,
     metadata: Option[String] = None,
-    labels: Option[Map[String, String]] = None
+    labels: Map[String, String] = Map.empty
   ): Future[TunnelGroupBackend] =
     apiClient.sendRequest[TunnelGroupBackend](
       NgrokApiClient.HttpMethod.Patch,

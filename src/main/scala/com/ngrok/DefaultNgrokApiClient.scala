@@ -18,6 +18,7 @@ import scala.collection.JavaConverters._
 import scala.compat.java8.FutureConverters._
 import scala.concurrent.{ExecutionContext, Future}
 import scala.reflect.ClassTag
+import scala.util.Properties
 
 /** Helpers for creating new [[DefaultNgrokApiClient]] instances. */
 object DefaultNgrokApiClient {
@@ -95,6 +96,8 @@ object DefaultNgrokApiClient {
 class DefaultNgrokApiClient private (apiKey: String, httpClient: WebClient, baseUri: URI) extends NgrokApiClient {
   import DefaultNgrokApiClient._
 
+  val SCALA_VERSION = Properties.versionNumberString
+
   override def sendRequest[O: Decoder: ClassTag](uri: URI)(implicit ec: ExecutionContext): Future[O] = {
     val request = this.httpClient.prepare.get(uri.toString)
     sendRequest[O](request, None)
@@ -127,7 +130,7 @@ class DefaultNgrokApiClient private (apiKey: String, httpClient: WebClient, base
     body: Option[Json]
   )(implicit ec: ExecutionContext): Future[O] = {
     request
-      .header(HttpHeaderNames.USER_AGENT, "ngrok-api-client-scala/" + Version.ClientVersion)
+      .header(HttpHeaderNames.USER_AGENT, "ngrok-api-scala/" + Version.ClientVersion + "/" + SCALA_VERSION)
       .header("ngrok-version", Version.ApiVersion)
       .header(HttpHeaderNames.AUTHORIZATION, "Bearer " + this.apiKey)
     body.foreach(body => request.content(MediaType.JSON, body.noSpaces.getBytes(StandardCharsets.UTF_8)))

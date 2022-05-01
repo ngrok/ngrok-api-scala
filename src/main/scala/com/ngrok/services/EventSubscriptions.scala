@@ -10,8 +10,8 @@ object EventSubscriptions {
   private case class EventSubscriptionsCreate(
     metadata: Option[String],
     description: Option[String],
-    sources: Option[List[EventSourceReplace]],
-    destinationIds: Option[List[String]]
+    sources: List[EventSourceReplace],
+    destinationIds: List[String]
   )
 
   private object EventSubscriptionsCreate {
@@ -20,8 +20,8 @@ object EventSubscriptions {
         List(
           value.metadata.map(_.asJson).map(("metadata", _)),
           value.description.map(_.asJson).map(("description", _)),
-          value.sources.map(_.asJson).map(("sources", _)),
-          value.destinationIds.map(_.asJson).map(("destination_ids", _))
+          if (value.sources.isEmpty) None else Option(("sources", value.sources.asJson)),
+          if (value.destinationIds.isEmpty) None else Option(("destination_ids", value.destinationIds.asJson))
         ).flatten.toMap.asJsonObject
       )
   }
@@ -29,8 +29,8 @@ object EventSubscriptions {
   private case class EventSubscriptionsUpdate(
     metadata: Option[String],
     description: Option[String],
-    sources: Option[List[EventSourceReplace]],
-    destinationIds: Option[List[String]]
+    sources: List[EventSourceReplace],
+    destinationIds: List[String]
   )
 
   private object EventSubscriptionsUpdate {
@@ -39,8 +39,8 @@ object EventSubscriptions {
         List(
           value.metadata.map(_.asJson).map(("metadata", _)),
           value.description.map(_.asJson).map(("description", _)),
-          value.sources.map(_.asJson).map(("sources", _)),
-          value.destinationIds.map(_.asJson).map(("destination_ids", _))
+          if (value.sources.isEmpty) None else Option(("sources", value.sources.asJson)),
+          if (value.destinationIds.isEmpty) None else Option(("destination_ids", value.destinationIds.asJson))
         ).flatten.toMap.asJsonObject
       )
   }
@@ -67,8 +67,8 @@ class EventSubscriptions private[ngrok] (apiClient: NgrokApiClient)(implicit ec:
   def create(
     metadata: Option[String] = None,
     description: Option[String] = None,
-    sources: Option[List[EventSourceReplace]] = None,
-    destinationIds: Option[List[String]] = None
+    sources: List[EventSourceReplace] = List.empty,
+    destinationIds: List[String] = List.empty
   ): Future[EventSubscription] =
     apiClient.sendRequest[EventSubscription](
       NgrokApiClient.HttpMethod.Post,
@@ -118,7 +118,7 @@ class EventSubscriptions private[ngrok] (apiClient: NgrokApiClient)(implicit ec:
       Option.empty
     )
 
-  /** List this Account's Event Subscriptions.
+  /** List this Account&#39;s Event Subscriptions.
     *
     * See also <a href="https://ngrok.com/docs/api#api-event-subscriptions-list">https://ngrok.com/docs/api#api-event-subscriptions-list</a>.
     *
@@ -157,8 +157,8 @@ class EventSubscriptions private[ngrok] (apiClient: NgrokApiClient)(implicit ec:
     id: String,
     metadata: Option[String] = None,
     description: Option[String] = None,
-    sources: Option[List[EventSourceReplace]] = None,
-    destinationIds: Option[List[String]] = None
+    sources: List[EventSourceReplace] = List.empty,
+    destinationIds: List[String] = List.empty
   ): Future[EventSubscription] =
     apiClient.sendRequest[EventSubscription](
       NgrokApiClient.HttpMethod.Patch,

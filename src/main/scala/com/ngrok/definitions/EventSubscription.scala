@@ -44,15 +44,15 @@ object EventSubscription {
       createdAt    <- c.downField("created_at").as[java.time.OffsetDateTime]
       metadata     <- c.downField("metadata").as[String]
       description  <- c.downField("description").as[String]
-      sources      <- c.downField("sources").as[List[EventSource]]
-      destinations <- c.downField("destinations").as[List[Ref]]
+      sources      <- c.downField("sources").as[Option[List[EventSource]]]
+      destinations <- c.downField("destinations").as[Option[List[Ref]]]
     } yield EventSubscription(
       id,
       uri,
       createdAt,
       metadata,
       description,
-      sources,
-      destinations
+      sources.getOrElse(List.empty),
+      destinations.getOrElse(List.empty)
     )
 }

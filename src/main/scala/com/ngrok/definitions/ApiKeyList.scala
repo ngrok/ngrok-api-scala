@@ -26,11 +26,11 @@ object ApiKeyList {
 
   implicit val decodeApiKeyList: io.circe.Decoder[ApiKeyList] = (c: io.circe.HCursor) =>
     for {
-      keys        <- c.downField("keys").as[List[ApiKey]]
+      keys        <- c.downField("keys").as[Option[List[ApiKey]]]
       uri         <- c.downField("uri").as[java.net.URI]
       nextPageUri <- c.downField("next_page_uri").as[Option[java.net.URI]]
     } yield ApiKeyList(
-      keys,
+      keys.getOrElse(List.empty),
       uri,
       nextPageUri
     )

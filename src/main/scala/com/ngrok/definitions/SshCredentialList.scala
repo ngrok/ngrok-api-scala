@@ -27,11 +27,11 @@ object SshCredentialList {
 
   implicit val decodeSshCredentialList: io.circe.Decoder[SshCredentialList] = (c: io.circe.HCursor) =>
     for {
-      sshCredentials <- c.downField("ssh_credentials").as[List[SshCredential]]
+      sshCredentials <- c.downField("ssh_credentials").as[Option[List[SshCredential]]]
       uri            <- c.downField("uri").as[java.net.URI]
       nextPageUri    <- c.downField("next_page_uri").as[Option[java.net.URI]]
     } yield SshCredentialList(
-      sshCredentials,
+      sshCredentials.getOrElse(List.empty),
       uri,
       nextPageUri
     )

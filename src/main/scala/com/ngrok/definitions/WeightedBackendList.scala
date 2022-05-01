@@ -27,11 +27,11 @@ object WeightedBackendList {
 
   implicit val decodeWeightedBackendList: io.circe.Decoder[WeightedBackendList] = (c: io.circe.HCursor) =>
     for {
-      backends    <- c.downField("backends").as[List[WeightedBackend]]
+      backends    <- c.downField("backends").as[Option[List[WeightedBackend]]]
       uri         <- c.downField("uri").as[java.net.URI]
       nextPageUri <- c.downField("next_page_uri").as[Option[java.net.URI]]
     } yield WeightedBackendList(
-      backends,
+      backends.getOrElse(List.empty),
       uri,
       nextPageUri
     )

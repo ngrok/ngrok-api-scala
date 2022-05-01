@@ -41,17 +41,17 @@ object AbuseReport {
       id        <- c.downField("id").as[String]
       uri       <- c.downField("uri").as[java.net.URI]
       createdAt <- c.downField("created_at").as[java.time.OffsetDateTime]
-      urls      <- c.downField("urls").as[List[java.net.URI]]
+      urls      <- c.downField("urls").as[Option[List[java.net.URI]]]
       metadata  <- c.downField("metadata").as[String]
       status    <- c.downField("status").as[String]
-      hostnames <- c.downField("hostnames").as[List[AbuseReportHostname]]
+      hostnames <- c.downField("hostnames").as[Option[List[AbuseReportHostname]]]
     } yield AbuseReport(
       id,
       uri,
       createdAt,
-      urls,
+      urls.getOrElse(List.empty),
       metadata,
       status,
-      hostnames
+      hostnames.getOrElse(List.empty)
     )
 }

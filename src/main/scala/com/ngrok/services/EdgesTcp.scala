@@ -10,7 +10,7 @@ object EdgesTcp {
   private case class EdgesTcpCreate(
     description: Option[String],
     metadata: Option[String],
-    hostports: Option[List[String]],
+    hostports: List[String],
     backend: Option[EndpointBackendMutate],
     ipRestriction: Option[EndpointIpPolicyMutate]
   )
@@ -20,7 +20,7 @@ object EdgesTcp {
       List(
         value.description.map(_.asJson).map(("description", _)),
         value.metadata.map(_.asJson).map(("metadata", _)),
-        value.hostports.map(_.asJson).map(("hostports", _)),
+        if (value.hostports.isEmpty) None else Option(("hostports", value.hostports.asJson)),
         value.backend.map(_.asJson).map(("backend", _)),
         value.ipRestriction.map(_.asJson).map(("ip_restriction", _))
       ).flatten.toMap.asJsonObject
@@ -30,7 +30,7 @@ object EdgesTcp {
   private case class EdgesTcpUpdate(
     description: Option[String],
     metadata: Option[String],
-    hostports: Option[List[String]],
+    hostports: List[String],
     backend: Option[EndpointBackendMutate],
     ipRestriction: Option[EndpointIpPolicyMutate]
   )
@@ -40,7 +40,7 @@ object EdgesTcp {
       List(
         value.description.map(_.asJson).map(("description", _)),
         value.metadata.map(_.asJson).map(("metadata", _)),
-        value.hostports.map(_.asJson).map(("hostports", _)),
+        if (value.hostports.isEmpty) None else Option(("hostports", value.hostports.asJson)),
         value.backend.map(_.asJson).map(("backend", _)),
         value.ipRestriction.map(_.asJson).map(("ip_restriction", _))
       ).flatten.toMap.asJsonObject
@@ -70,7 +70,7 @@ class EdgesTcp private[ngrok] (apiClient: NgrokApiClient)(implicit ec: Execution
   def create(
     description: Option[String] = None,
     metadata: Option[String] = None,
-    hostports: Option[List[String]] = None,
+    hostports: List[String] = List.empty,
     backend: Option[EndpointBackendMutate] = None,
     ipRestriction: Option[EndpointIpPolicyMutate] = None
   ): Future[TcpEdge] =
@@ -149,7 +149,7 @@ class EdgesTcp private[ngrok] (apiClient: NgrokApiClient)(implicit ec: Execution
     id: String,
     description: Option[String] = None,
     metadata: Option[String] = None,
-    hostports: Option[List[String]] = None,
+    hostports: List[String] = List.empty,
     backend: Option[EndpointBackendMutate] = None,
     ipRestriction: Option[EndpointIpPolicyMutate] = None
   ): Future[TcpEdge] =

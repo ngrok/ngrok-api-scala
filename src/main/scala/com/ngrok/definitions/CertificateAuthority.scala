@@ -60,8 +60,8 @@ object CertificateAuthority {
       subjectCommonName <- c.downField("subject_common_name").as[String]
       notBefore         <- c.downField("not_before").as[java.time.OffsetDateTime]
       notAfter          <- c.downField("not_after").as[java.time.OffsetDateTime]
-      keyUsages         <- c.downField("key_usages").as[List[String]]
-      extendedKeyUsages <- c.downField("extended_key_usages").as[List[String]]
+      keyUsages         <- c.downField("key_usages").as[Option[List[String]]]
+      extendedKeyUsages <- c.downField("extended_key_usages").as[Option[List[String]]]
     } yield CertificateAuthority(
       id,
       uri,
@@ -72,7 +72,7 @@ object CertificateAuthority {
       subjectCommonName,
       notBefore,
       notAfter,
-      keyUsages,
-      extendedKeyUsages
+      keyUsages.getOrElse(List.empty),
+      extendedKeyUsages.getOrElse(List.empty)
     )
 }

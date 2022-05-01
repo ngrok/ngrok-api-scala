@@ -10,12 +10,12 @@ import io.circe.syntax._
   * @param createdAt timestamp when the backend was created, RFC 3339 format
   * @param description human-readable description of this backend. Optional
   * @param metadata arbitrary user-defined machine-readable data of this backend. Optional
-  * @param labels labels to watch for tunnels on, e.g. app->foo, dc->bar
+  * @param labels labels to watch for tunnels on, e.g. app-&gt;foo, dc-&gt;bar
   * @param tunnels tunnels matching this backend
   */
 final case class TunnelGroupBackend(
   id: String,
-  uri: String,
+  uri: java.net.URI,
   createdAt: java.time.OffsetDateTime,
   description: String,
   metadata: String,
@@ -40,19 +40,19 @@ object TunnelGroupBackend {
   implicit val decodeTunnelGroupBackend: io.circe.Decoder[TunnelGroupBackend] = (c: io.circe.HCursor) =>
     for {
       id          <- c.downField("id").as[String]
-      uri         <- c.downField("uri").as[String]
+      uri         <- c.downField("uri").as[java.net.URI]
       createdAt   <- c.downField("created_at").as[java.time.OffsetDateTime]
       description <- c.downField("description").as[String]
       metadata    <- c.downField("metadata").as[String]
-      labels      <- c.downField("labels").as[Map[String, String]]
-      tunnels     <- c.downField("tunnels").as[List[Ref]]
+      labels      <- c.downField("labels").as[Option[Map[String, String]]]
+      tunnels     <- c.downField("tunnels").as[Option[List[Ref]]]
     } yield TunnelGroupBackend(
       id,
       uri,
       createdAt,
       description,
       metadata,
-      labels,
-      tunnels
+      labels.getOrElse(Map.empty),
+      tunnels.getOrElse(List.empty)
     )
 }

@@ -11,7 +11,7 @@ ThisBuild / version := Version.version
 ThisBuild / description := "ngrok API client for Scala applications"
 ThisBuild / licenses := List("MIT" -> url("https://mit-license.org/"))
 ThisBuild / homepage := Some(url("https://ngrok.com"))
-ThisBuild / crossScalaVersions := Seq("2.13.6", "2.12.14")
+ThisBuild / crossScalaVersions := Seq("2.13.8", "2.12.15")
 ThisBuild / scalaVersion := (ThisBuild / crossScalaVersions).value.head
 
 ThisBuild / scmInfo := Some(

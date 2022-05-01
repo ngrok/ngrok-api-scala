@@ -105,7 +105,7 @@ class TunnelSessions private[ngrok] (apiClient: NgrokApiClient)(implicit ec: Exe
     * breaking compatibility issues. If you wish to update to a new major version,
     * that must be done manually. Still, please be aware that updating your ngrok
     * agent could break your integration. This call will fail in any of the following
-    * circumstances: there is no update available the ngrok agent's configuration
+    * circumstances: there is no update available the ngrok agent&#39;s configuration
     * disabled update checks the agent is currently in process of updating the agent
     * has already successfully updated but has not yet been restarted
     *

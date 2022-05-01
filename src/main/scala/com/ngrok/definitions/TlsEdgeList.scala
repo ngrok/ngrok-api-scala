@@ -26,11 +26,11 @@ object TlsEdgeList {
 
   implicit val decodeTlsEdgeList: io.circe.Decoder[TlsEdgeList] = (c: io.circe.HCursor) =>
     for {
-      tlsEdges    <- c.downField("tls_edges").as[List[TlsEdge]]
+      tlsEdges    <- c.downField("tls_edges").as[Option[List[TlsEdge]]]
       uri         <- c.downField("uri").as[java.net.URI]
       nextPageUri <- c.downField("next_page_uri").as[Option[java.net.URI]]
     } yield TlsEdgeList(
-      tlsEdges,
+      tlsEdges.getOrElse(List.empty),
       uri,
       nextPageUri
     )

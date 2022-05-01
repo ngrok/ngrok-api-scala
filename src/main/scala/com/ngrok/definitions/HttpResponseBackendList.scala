@@ -27,11 +27,11 @@ object HttpResponseBackendList {
 
   implicit val decodeHttpResponseBackendList: io.circe.Decoder[HttpResponseBackendList] = (c: io.circe.HCursor) =>
     for {
-      backends    <- c.downField("backends").as[List[HttpResponseBackend]]
+      backends    <- c.downField("backends").as[Option[List[HttpResponseBackend]]]
       uri         <- c.downField("uri").as[java.net.URI]
       nextPageUri <- c.downField("next_page_uri").as[Option[java.net.URI]]
     } yield HttpResponseBackendList(
-      backends,
+      backends.getOrElse(List.empty),
       uri,
       nextPageUri
     )

@@ -27,11 +27,11 @@ object HttpsEdgeList {
 
   implicit val decodeHttpsEdgeList: io.circe.Decoder[HttpsEdgeList] = (c: io.circe.HCursor) =>
     for {
-      httpsEdges  <- c.downField("https_edges").as[List[HttpsEdge]]
+      httpsEdges  <- c.downField("https_edges").as[Option[List[HttpsEdge]]]
       uri         <- c.downField("uri").as[java.net.URI]
       nextPageUri <- c.downField("next_page_uri").as[Option[java.net.URI]]
     } yield HttpsEdgeList(
-      httpsEdges,
+      httpsEdges.getOrElse(List.empty),
       uri,
       nextPageUri
     )
