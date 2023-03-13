@@ -70,6 +70,22 @@ class Ngrok private (apiClient: NgrokApiClient)(implicit ec: ExecutionContext) {
     */
   lazy val apiKeys: ApiKeys = new ApiKeys(this.apiClient)
 
+  /** Creates a service client for ApplicationSessions.
+    *
+    * See also <a href="https://ngrok.com/docs/api#api-application-sessions">https://ngrok.com/docs/api#api-application-sessions</a>.
+    *
+    * @return a service client
+    */
+  lazy val applicationSessions: ApplicationSessions = new ApplicationSessions(this.apiClient)
+
+  /** Creates a service client for ApplicationUsers.
+    *
+    * See also <a href="https://ngrok.com/docs/api#api-application-users">https://ngrok.com/docs/api#api-application-users</a>.
+    *
+    * @return a service client
+    */
+  lazy val applicationUsers: ApplicationUsers = new ApplicationUsers(this.apiClient)
+
   /** Certificate Authorities are x509 certificates that are used to sign other
     *  x509 certificates. Attach a Certificate Authority to the Mutual TLS module
     *  to verify that the TLS certificate presented by a client has been signed by

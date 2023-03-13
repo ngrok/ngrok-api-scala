@@ -26,7 +26,7 @@ final case class Tunnel(
   region: String,
   tunnelSession: Ref,
   endpoint: Option[Ref] = None,
-  labels: Map[String, String],
+  labels: Option[Map[String, String]] = None,
   backends: Option[List[Ref]] = None,
   forwardsTo: String
 )
@@ -42,7 +42,7 @@ object Tunnel {
       Option(("region", value.region.asJson)),
       Option(("tunnel_session", value.tunnelSession.asJson)),
       value.endpoint.map(_.asJson).map(("endpoint", _)),
-      Option(("labels", value.labels.asJson)),
+      if (value.labels.isEmpty) None else Option(("labels", value.labels.asJson)),
       if (value.backends.isEmpty) None else Option(("backends", value.backends.asJson)),
       Option(("forwards_to", value.forwardsTo.asJson))
     ).flatten.toMap.asJsonObject
@@ -70,7 +70,7 @@ object Tunnel {
       region,
       tunnelSession,
       endpoint,
-      labels.getOrElse(Map.empty),
+      labels,
       backends,
       forwardsTo
     )

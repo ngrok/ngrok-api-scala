@@ -73,11 +73,15 @@ class IpPolicyRulesTest extends AnyFreeSpec with Matchers with ScalaFutures with
           .withHeader(HttpHeaderNames.USER_AGENT.toString(), equalTo(UserAgent))
           .withHeader("ngrok-version", equalTo(Version.ApiVersion))
           .withHeader(HttpHeaderNames.CONTENT_TYPE.toString(), containing("application/json"))
-          .withRequestBody(equalToJson(Map(
-            "ip_policy_id" -> mockIpPolicy.id,
-            "cidr" -> mockIpPolicyRule.cidr,
-            "action" -> mockIpPolicyRule.action
-          ).asJson.noSpaces))
+          .withRequestBody(
+            equalToJson(
+              Map(
+                "ip_policy_id" -> mockIpPolicy.id,
+                "cidr"         -> mockIpPolicyRule.cidr,
+                "action"       -> mockIpPolicyRule.action
+              ).asJson.noSpaces
+            )
+          )
           .willReturn(
             ok(mockIpPolicyRule.asJson.noSpaces)
               .withHeader(HttpHeaderNames.CONTENT_TYPE.toString(), "application/json")
@@ -104,7 +108,7 @@ class IpPolicyRulesTest extends AnyFreeSpec with Matchers with ScalaFutures with
     }
   }
 
-  private def createIpPolicy(): String = ngrok.ipPolicies.create().futureValue.id
+  private def createIpPolicy(): String         = ngrok.ipPolicies.create().futureValue.id
   private def deleteIpPolicy(id: String): Unit = ngrok.ipPolicies.delete(id).futureValue
 
   private def createIpPolicyRule(policyId: String): String = {
