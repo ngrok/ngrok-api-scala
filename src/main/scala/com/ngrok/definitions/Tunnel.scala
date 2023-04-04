@@ -8,7 +8,7 @@ import io.circe.syntax._
   * @param id unique tunnel resource identifier
   * @param publicUrl URL of the ephemeral tunnel&#39;s public endpoint
   * @param startedAt timestamp when the tunnel was initiated in RFC 3339 format
-  * @param metadata user-supplied metadata for the tunnel defined in the ngrok configuration file. See the tunnel <a href="https://ngrok.com/docs#tunnel-definitions-metadata">metadata configuration option</a> In API version 0, this value was instead pulled from the top-level <a href="https://ngrok.com/docs#config_metadata">metadata configuration option</a>.
+  * @param metadata user-supplied metadata for the tunnel defined in the ngrok configuration file. See the tunnel <a href="/ngrok-agent/config#common-tunnel-configuration-properties">metadata configuration option</a> In API version 0, this value was instead pulled from the top-level <a href="/ngrok-agent/config#metadata">metadata configuration option</a>.
   * @param proto tunnel protocol for ephemeral tunnels. one of <code>http</code>, <code>https</code>, <code>tcp</code> or <code>tls</code>
   * @param region identifier of tune region where the tunnel is running
   * @param tunnelSession reference object pointing to the tunnel session on which this tunnel was started
@@ -26,7 +26,7 @@ final case class Tunnel(
   region: String,
   tunnelSession: Ref,
   endpoint: Option[Ref] = None,
-  labels: Map[String, String],
+  labels: Option[Map[String, String]] = None,
   backends: Option[List[Ref]] = None,
   forwardsTo: String
 )
@@ -42,7 +42,7 @@ object Tunnel {
       Option(("region", value.region.asJson)),
       Option(("tunnel_session", value.tunnelSession.asJson)),
       value.endpoint.map(_.asJson).map(("endpoint", _)),
-      Option(("labels", value.labels.asJson)),
+      if (value.labels.isEmpty) None else Option(("labels", value.labels.asJson)),
       if (value.backends.isEmpty) None else Option(("backends", value.backends.asJson)),
       Option(("forwards_to", value.forwardsTo.asJson))
     ).flatten.toMap.asJsonObject
@@ -70,7 +70,7 @@ object Tunnel {
       region,
       tunnelSession,
       endpoint,
-      labels.getOrElse(Map.empty),
+      labels,
       backends,
       forwardsTo
     )

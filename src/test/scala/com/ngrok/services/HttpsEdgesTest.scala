@@ -54,10 +54,14 @@ class HttpsEdgesTest extends AnyFreeSpec with Matchers with ScalaFutures with Op
           .withHeader(HttpHeaderNames.USER_AGENT.toString(), equalTo(UserAgent))
           .withHeader("ngrok-version", equalTo(Version.ApiVersion))
           .withHeader(HttpHeaderNames.CONTENT_TYPE.toString(), containing("application/json"))
-          .withRequestBody(equalToJson(Map(
-            "metadata" -> mockEdge.metadata.asJson,
-            "hostports" -> testHostports.asJson
-          ).asJson.noSpaces))
+          .withRequestBody(
+            equalToJson(
+              Map(
+                "metadata"  -> mockEdge.metadata.asJson,
+                "hostports" -> testHostports.asJson
+              ).asJson.noSpaces
+            )
+          )
           .willReturn(
             ok(mockEdge.asJson.noSpaces)
               .withHeader(HttpHeaderNames.CONTENT_TYPE.toString(), "application/json")
@@ -101,10 +105,12 @@ class HttpsEdgesTest extends AnyFreeSpec with Matchers with ScalaFutures with Op
   }
 
   private def createHttpsEdge(hostports: List[String]): String = {
-    val edge = ngrok.edges.https.create(
-      metadata = Some(mockEdge.metadata),
-      hostports = hostports
-    ).futureValue
+    val edge = ngrok.edges.https
+      .create(
+        metadata = Some(mockEdge.metadata),
+        hostports = hostports
+      )
+      .futureValue
     edge.hostports mustBe Some(hostports)
     edge.id
   }

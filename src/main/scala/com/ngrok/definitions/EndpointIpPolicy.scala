@@ -6,7 +6,7 @@ import io.circe.syntax._
   *
   * @constructor create a new EndpointIpPolicy.
   * @param enabled <code>true</code> if the module will be applied to traffic, <code>false</code> to disable. default <code>true</code> if unspecified
-  * @param ipPolicies the value of the <code>ip_policies</code> parameter as a [[scala.List]] of [[Ref]]
+  * @param ipPolicies list of all IP policies that will be used to check if a source IP is allowed access to the endpoint
   */
 final case class EndpointIpPolicy(
   enabled: Option[Boolean] = None,
