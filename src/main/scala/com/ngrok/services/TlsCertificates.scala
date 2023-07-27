@@ -1,3 +1,5 @@
+/* Code generated for API Clients. DO NOT EDIT. */
+
 package com.ngrok.services
 
 import com.ngrok.NgrokApiClient
@@ -58,8 +60,8 @@ class TlsCertificates private[ngrok] (apiClient: NgrokApiClient)(implicit ec: Ex
     *
     * See also <a href="https://ngrok.com/docs/api#api-tls-certificates-create">https://ngrok.com/docs/api#api-tls-certificates-create</a>.
     *
-    * @param certificatePem chain of PEM-encoded certificates, leaf first. See <a href="https://ngrok.com/docs/api#tls-certificates-pem">Certificate Bundles</a>.
-    * @param privateKeyPem private key for the TLS certificate, PEM-encoded. See <a href="https://ngrok.com/docs/ngrok-link#tls-certificates-key">Private Keys</a>.
+    * @param certificatePem chain of PEM-encoded certificates, leaf first. See <a href="/cloud-edge/endpoints#certificate-chains">Certificate Bundles</a>.
+    * @param privateKeyPem private key for the TLS certificate, PEM-encoded. See <a href="/cloud-edge/endpoints#private-keys">Private Keys</a>.
     * @param description human-readable description of this TLS certificate. optional, max 255 bytes.
     * @param metadata arbitrary user-defined machine-readable data of this TLS certificate. optional, max 4096 bytes.
     * @return a [[scala.concurrent.Future]] encapsulating the API call's result

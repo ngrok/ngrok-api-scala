@@ -1,3 +1,5 @@
+/* Code generated for API Clients. DO NOT EDIT. */
+
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.util.stream.Collectors

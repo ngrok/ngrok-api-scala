@@ -1,3 +1,5 @@
+/* Code generated for API Clients. DO NOT EDIT. */
+
 package com.ngrok.services
 
 import com.ngrok.NgrokApiClient
@@ -9,14 +11,16 @@ import scala.concurrent.{ExecutionContext, Future}
 object ApiKeys {
   private case class ApiKeysCreate(
     description: Option[String],
-    metadata: Option[String]
+    metadata: Option[String],
+    ownerId: Option[String]
   )
 
   private object ApiKeysCreate {
     implicit val encodeApiKeysCreate: Encoder[ApiKeysCreate] = Encoder.encodeJsonObject.contramap(value =>
       List(
         value.description.map(_.asJson).map(("description", _)),
-        value.metadata.map(_.asJson).map(("metadata", _))
+        value.metadata.map(_.asJson).map(("metadata", _)),
+        value.ownerId.map(_.asJson).map(("owner_id", _))
       ).flatten.toMap.asJsonObject
     )
   }
@@ -58,11 +62,13 @@ class ApiKeys private[ngrok] (apiClient: NgrokApiClient)(implicit ec: ExecutionC
     *
     * @param description human-readable description of what uses the API key to authenticate. optional, max 255 bytes.
     * @param metadata arbitrary user-defined data of this API key. optional, max 4096 bytes
+    * @param ownerId If supplied at credential creation, ownership will be assigned to the specified User or Bot. Only admins may specify an owner other than themselves. Defaults to the authenticated User or Bot.
     * @return a [[scala.concurrent.Future]] encapsulating the API call's result
     */
   def create(
     description: Option[String] = None,
-    metadata: Option[String] = None
+    metadata: Option[String] = None,
+    ownerId: Option[String] = None
   ): Future[ApiKey] =
     apiClient.sendRequest[ApiKey](
       NgrokApiClient.HttpMethod.Post,
@@ -71,7 +77,8 @@ class ApiKeys private[ngrok] (apiClient: NgrokApiClient)(implicit ec: ExecutionC
       Option(
         ApiKeysCreate(
           description,
-          metadata
+          metadata,
+          ownerId
         ).asJson
       )
     )

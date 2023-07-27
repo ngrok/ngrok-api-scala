@@ -1,3 +1,5 @@
+/* Code generated for API Clients. DO NOT EDIT. */
+
 package com.ngrok.definitions
 
 import io.circe.syntax._
@@ -11,6 +13,7 @@ import io.circe.syntax._
   * @param metadata arbitrary user-defined data of this API key. optional, max 4096 bytes
   * @param createdAt timestamp when the api key was created, RFC 3339 format
   * @param token the bearer token that can be placed into the Authorization header to authenticate request to the ngrok API. <strong>This value is only available one time, on the API response from key creation. Otherwise it is null.</strong>
+  * @param ownerId If supplied at credential creation, ownership will be assigned to the specified User or Bot. Only admins may specify an owner other than themselves. Defaults to the authenticated User or Bot.
   */
 final case class ApiKey(
   id: String,
@@ -18,7 +21,8 @@ final case class ApiKey(
   description: String,
   metadata: String,
   createdAt: java.time.OffsetDateTime,
-  token: Option[String] = None
+  token: Option[String] = None,
+  ownerId: Option[String] = None
 )
 
 object ApiKey {
@@ -29,7 +33,8 @@ object ApiKey {
       Option(("description", value.description.asJson)),
       Option(("metadata", value.metadata.asJson)),
       Option(("created_at", value.createdAt.asJson)),
-      value.token.map(_.asJson).map(("token", _))
+      value.token.map(_.asJson).map(("token", _)),
+      value.ownerId.map(_.asJson).map(("owner_id", _))
     ).flatten.toMap.asJsonObject
   )
 
@@ -41,12 +46,14 @@ object ApiKey {
       metadata    <- c.downField("metadata").as[String]
       createdAt   <- c.downField("created_at").as[java.time.OffsetDateTime]
       token       <- c.downField("token").as[Option[String]]
+      ownerId     <- c.downField("owner_id").as[Option[String]]
     } yield ApiKey(
       id,
       uri,
       description,
       metadata,
       createdAt,
-      token
+      token,
+      ownerId
     )
 }

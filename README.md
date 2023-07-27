@@ -1,3 +1,5 @@
+<!-- Code generated for API Clients. DO NOT EDIT. -->
+
 # Unstable
 
 This library is currently unstable. We know of rough edges
@@ -39,6 +41,10 @@ See the above URL for the latest version of the API client.
 
 Versions of this library are published for Scala 2.12 and Scala 2.13
 (the 2.13 version can be used with Scala 3).
+
+## Support
+
+The best place to get support using this library is through the [ngrok Slack Community](https://ngrok.com/slack). If you find any bugs, please contribute by opening a [new GitHub issue](https://github.com/ngrok/ngrok-api-scala/issues/new/choose).
 
 ## Documentation
 

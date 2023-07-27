@@ -1,3 +1,5 @@
+/* Code generated for API Clients. DO NOT EDIT. */
+
 package com.ngrok.services
 
 import com.ngrok.NgrokApiClient
@@ -55,8 +57,7 @@ class EventDestinations private[ngrok] (apiClient: NgrokApiClient)(implicit ec: 
   import EventDestinations._
 
   /** Create a new Event Destination. It will not apply to anything until it is
-    * associated with an Event Stream, and that Event Stream is associated with an
-    * Endpoint Config.
+    * associated with an Event Subscription.
     *
     * See also <a href="https://ngrok.com/docs/api#api-event-destinations-create">https://ngrok.com/docs/api#api-event-destinations-create</a>.
     *

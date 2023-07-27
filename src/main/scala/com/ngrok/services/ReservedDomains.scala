@@ -1,3 +1,5 @@
+/* Code generated for API Clients. DO NOT EDIT. */
+
 package com.ngrok.services
 
 import com.ngrok.NgrokApiClient
@@ -8,7 +10,8 @@ import scala.concurrent.{ExecutionContext, Future}
 
 object ReservedDomains {
   private case class ReservedDomainsCreate(
-    name: String,
+    name: Option[String],
+    domain: Option[String],
     region: Option[String],
     description: Option[String],
     metadata: Option[String],
@@ -20,7 +23,8 @@ object ReservedDomains {
     implicit val encodeReservedDomainsCreate: Encoder[ReservedDomainsCreate] =
       Encoder.encodeJsonObject.contramap(value =>
         List(
-          Option(("name", value.name.asJson)),
+          value.name.map(_.asJson).map(("name", _)),
+          value.domain.map(_.asJson).map(("domain", _)),
           value.region.map(_.asJson).map(("region", _)),
           value.description.map(_.asJson).map(("description", _)),
           value.metadata.map(_.asJson).map(("metadata", _)),
@@ -66,6 +70,7 @@ class ReservedDomains private[ngrok] (apiClient: NgrokApiClient)(implicit ec: Ex
     * See also <a href="https://ngrok.com/docs/api#api-reserved-domains-create">https://ngrok.com/docs/api#api-reserved-domains-create</a>.
     *
     * @param name the domain name to reserve. It may be a full domain name like app.example.com. If the name does not contain a &#39;.&#39; it will reserve that subdomain on ngrok.io.
+    * @param domain hostname of the reserved domain
     * @param region reserve the domain in this geographic ngrok datacenter. Optional, default is us. (au, eu, ap, us, jp, in, sa)
     * @param description human-readable description of what this reserved domain will be used for
     * @param metadata arbitrary user-defined machine-readable data of this reserved domain. Optional, max 4096 bytes.
@@ -74,7 +79,8 @@ class ReservedDomains private[ngrok] (apiClient: NgrokApiClient)(implicit ec: Ex
     * @return a [[scala.concurrent.Future]] encapsulating the API call's result
     */
   def create(
-    name: String,
+    name: Option[String] = None,
+    domain: Option[String] = None,
     region: Option[String] = None,
     description: Option[String] = None,
     metadata: Option[String] = None,
@@ -88,6 +94,7 @@ class ReservedDomains private[ngrok] (apiClient: NgrokApiClient)(implicit ec: Ex
       Option(
         ReservedDomainsCreate(
           name,
+          domain,
           region,
           description,
           metadata,

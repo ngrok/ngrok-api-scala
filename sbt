@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
-#
+
+# Code generated for API Clients. DO NOT EDIT.
+
 # A more capable sbt runner, coincidentally also called sbt.
 # Author: Paul Phillips <paulp@improving.org>
 # https://github.com/paulp/sbt-extras

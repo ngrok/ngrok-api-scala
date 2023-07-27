@@ -1,3 +1,5 @@
+/* Code generated for API Clients. DO NOT EDIT. */
+
 package com.ngrok.definitions
 
 import io.circe.syntax._
@@ -16,11 +18,11 @@ import io.circe.syntax._
 final case class EndpointOAuthGitHub(
   clientId: Option[String] = None,
   clientSecret: Option[String] = None,
-  scopes: List[String],
-  emailAddresses: List[String],
-  emailDomains: List[String],
-  teams: List[String],
-  organizations: List[String]
+  scopes: Option[List[String]] = None,
+  emailAddresses: Option[List[String]] = None,
+  emailDomains: Option[List[String]] = None,
+  teams: Option[List[String]] = None,
+  organizations: Option[List[String]] = None
 )
 
 object EndpointOAuthGitHub {
@@ -29,11 +31,11 @@ object EndpointOAuthGitHub {
       List(
         value.clientId.map(_.asJson).map(("client_id", _)),
         value.clientSecret.map(_.asJson).map(("client_secret", _)),
-        Option(("scopes", value.scopes.asJson)),
-        Option(("email_addresses", value.emailAddresses.asJson)),
-        Option(("email_domains", value.emailDomains.asJson)),
-        Option(("teams", value.teams.asJson)),
-        Option(("organizations", value.organizations.asJson))
+        if (value.scopes.isEmpty) None else Option(("scopes", value.scopes.asJson)),
+        if (value.emailAddresses.isEmpty) None else Option(("email_addresses", value.emailAddresses.asJson)),
+        if (value.emailDomains.isEmpty) None else Option(("email_domains", value.emailDomains.asJson)),
+        if (value.teams.isEmpty) None else Option(("teams", value.teams.asJson)),
+        if (value.organizations.isEmpty) None else Option(("organizations", value.organizations.asJson))
       ).flatten.toMap.asJsonObject
     )
 
@@ -49,10 +51,10 @@ object EndpointOAuthGitHub {
     } yield EndpointOAuthGitHub(
       clientId,
       clientSecret,
-      scopes.getOrElse(List.empty),
-      emailAddresses.getOrElse(List.empty),
-      emailDomains.getOrElse(List.empty),
-      teams.getOrElse(List.empty),
-      organizations.getOrElse(List.empty)
+      scopes,
+      emailAddresses,
+      emailDomains,
+      teams,
+      organizations
     )
 }

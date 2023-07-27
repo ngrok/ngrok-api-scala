@@ -1,3 +1,5 @@
+/* Code generated for API Clients. DO NOT EDIT. */
+
 package com.ngrok
 
 import com.ngrok.services._
@@ -69,6 +71,32 @@ class Ngrok private (apiClient: NgrokApiClient)(implicit ec: ExecutionContext) {
     * @return a service client
     */
   lazy val apiKeys: ApiKeys = new ApiKeys(this.apiClient)
+
+  /** Creates a service client for ApplicationSessions.
+    *
+    * See also <a href="https://ngrok.com/docs/api#api-application-sessions">https://ngrok.com/docs/api#api-application-sessions</a>.
+    *
+    * @return a service client
+    */
+  lazy val applicationSessions: ApplicationSessions = new ApplicationSessions(this.apiClient)
+
+  /** Creates a service client for ApplicationUsers.
+    *
+    * See also <a href="https://ngrok.com/docs/api#api-application-users">https://ngrok.com/docs/api#api-application-users</a>.
+    *
+    * @return a service client
+    */
+  lazy val applicationUsers: ApplicationUsers = new ApplicationUsers(this.apiClient)
+
+  /** Tunnel Sessions represent instances of ngrok agents or SSH reverse tunnel
+    *  sessions that are running and connected to the ngrok service. Each tunnel
+    *  session can include one or more Tunnels.
+    *
+    * See also <a href="https://ngrok.com/docs/api#api-tunnel-sessions">https://ngrok.com/docs/api#api-tunnel-sessions</a>.
+    *
+    * @return a service client
+    */
+  lazy val tunnelSessions: TunnelSessions = new TunnelSessions(this.apiClient)
 
   /** Certificate Authorities are x509 certificates that are used to sign other
     *  x509 certificates. Attach a Certificate Authority to the Mutual TLS module
@@ -232,16 +260,6 @@ class Ngrok private (apiClient: NgrokApiClient)(implicit ec: ExecutionContext) {
     * @return a service client
     */
   lazy val tlsCertificates: TlsCertificates = new TlsCertificates(this.apiClient)
-
-  /** Tunnel Sessions represent instances of ngrok agents or SSH reverse tunnel
-    *  sessions that are running and connected to the ngrok service. Each tunnel
-    *  session can include one or more Tunnels.
-    *
-    * See also <a href="https://ngrok.com/docs/api#api-tunnel-sessions">https://ngrok.com/docs/api#api-tunnel-sessions</a>.
-    *
-    * @return a service client
-    */
-  lazy val tunnelSessions: TunnelSessions = new TunnelSessions(this.apiClient)
 
   /** Tunnels provide endpoints to access services exposed by a running ngrok
     *  agent tunnel session or an SSH reverse tunnel session.
