@@ -1,14 +1,21 @@
-# Unstable
+---
 
-This library is currently unstable. We know of rough edges
-and are working to bring it to parity with our other API client
-libraries. Please feel free to try it out and let us know if you find
-it useful!
+# ⚠️ **Deprecation Notice**
+
+This repository is deprecated and will no longer receive updates.
+
+Feel free to use one of our [non-deprecated API clients](https://github.com/ngrok?q=ngrok-api&type=all&language=&sort=) or fork this repository. Existing forks are listed in [Network](../../network) and [Forks](../../network/members).
+
+---
 
 # ngrok API client library for Scala
 
 This library wraps the [ngrok HTTP API](https://ngrok.com/docs/api) to
 make it easier to consume in Scala.
+
+### Unstable
+
+This library is currently unstable and is not at parity with our [other client libraries](https://github.com/ngrok?q=ngrok-api&type=all&language=&sort=).
 
 ## Usage
 
